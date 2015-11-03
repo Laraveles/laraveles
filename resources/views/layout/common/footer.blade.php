@@ -1,0 +1,1 @@
+{{-- layout.common.footer --}}

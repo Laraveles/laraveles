@@ -1,6 +1,6 @@
 <?php
 
-namespace Laraveles\Core;
+namespace Laraveles;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
