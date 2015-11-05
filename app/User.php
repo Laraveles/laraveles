@@ -21,7 +21,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['name', 'username', 'email', 'password'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -35,13 +35,26 @@ class User extends Model implements AuthenticatableContract,
      *
      * @param $provider
      * @param $identifier
-     *
      * @return mixed
      */
     public static function findByProvider($provider, $identifier)
     {
         $field = $provider . '_id';
+
         return static::where($field, $identifier)->firstOrFail();
+    }
+
+    /**
+     * Registering a new user but not yet persisting.
+     *
+     * @param $username
+     * @param $password
+     * @param $email
+     * @return static
+     */
+    public static function register($username, $password, $email)
+    {
+        return new static(compact('username', 'password', 'email'));
     }
 
     /**
