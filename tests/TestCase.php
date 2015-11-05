@@ -10,6 +10,16 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     protected $baseUrl = 'http://localhost';
 
     /**
+     * Setting up the test environment.
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->configureDatabase();
+    }
+
+    /**
      * Creates the application.
      *
      * @return \Illuminate\Foundation\Application
@@ -21,5 +31,11 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
         return $app;
+    }
+
+    protected function configureDatabase()
+    {
+        $this->app['config']->set('database.default', 'sqlite');
+        $this->app['config']->set('database.connections.sqlite.database', ':memory:');
     }
 }
