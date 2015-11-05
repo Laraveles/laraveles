@@ -24,7 +24,7 @@ class CreateUserHandler
      *
      * @param CreateUser $command
      */
-    public function handler(CreateUser $command)
+    public function handle(CreateUser $command)
     {
         list($username, $email, $password, $provider) = $this->extractBasicData($command->data);
 
