@@ -23,6 +23,7 @@ class CreateUserHandler
      * Handles the creation of a new user.
      *
      * @param CreateUser $command
+     * @return static
      */
     public function handle(CreateUser $command)
     {
