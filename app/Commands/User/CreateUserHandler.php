@@ -2,6 +2,7 @@
 
 namespace Laraveles\Commands\User;
 
+use Laraveles\User;
 use Laraveles\Events\UserWasCreated;
 
 class CreateUserHandler
@@ -40,6 +41,8 @@ class CreateUserHandler
         $user->save();
 
         event(new UserWasCreated($user));
+
+        return $user;
     }
 
     /**
