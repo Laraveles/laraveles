@@ -43,4 +43,14 @@ class User extends Model implements AuthenticatableContract,
         $field = $provider . '_id';
         return static::where($field, $identifier)->firstOrFail();
     }
+
+    /**
+     * Check if the user has been activated.
+     *
+     * @return mixed
+     */
+    public function isActive()
+    {
+        return $this->getAttribute('active');
+    }
 }

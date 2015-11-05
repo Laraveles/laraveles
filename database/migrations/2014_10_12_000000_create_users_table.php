@@ -18,6 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password', 60);
 
+            $table->boolean('active');
+
             $table->string('github_id');
             $table->string('google_id');
 
