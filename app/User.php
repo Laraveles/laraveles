@@ -29,4 +29,18 @@ class User extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+    /**
+     * Finds an user by its provider.
+     *
+     * @param $provider
+     * @param $identifier
+     *
+     * @return mixed
+     */
+    public static function findByProvider($provider, $identifier)
+    {
+        $field = $provider . '_id';
+        return static::where($field, $identifier)->firstOrFail();
+    }
 }

@@ -26,8 +26,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \Laraveles\Http\Middleware\Authenticate::class,
+        'auth'       => \Laraveles\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'guest' => \Laraveles\Http\Middleware\RedirectIfAuthenticated::class,
+        'guest'      => \Laraveles\Http\Middleware\RedirectIfAuthenticated::class,
     ];
 }

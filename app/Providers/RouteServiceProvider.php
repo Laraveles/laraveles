@@ -17,14 +17,25 @@ class RouteServiceProvider extends ServiceProvider
     protected $namespace = 'Laraveles\Http\Controllers';
 
     /**
+     * Routing patterns.
+     *
+     * @var array
+     */
+    protected $patterns = [
+        'authProvider' => 'github|google'
+    ];
+
+    /**
      * Define your route model bindings, pattern filters, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param  \Illuminate\Routing\Router $router
+     *
      * @return void
      */
     public function boot(Router $router)
     {
-        //
+        // Registering all the patterns available
+        $router->patterns($this->patterns);
 
         parent::boot($router);
     }
@@ -32,13 +43,17 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define the routes for the application.
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param  \Illuminate\Routing\Router $router
+     *
      * @return void
      */
     public function map(Router $router)
     {
+        // Mapping every route file found in the Routes folder and including it
         $router->group(['namespace' => $this->namespace], function ($router) {
-            require app_path('Http/routes.php');
+            foreach (\File::allFiles(app_path('Http/Routes')) as $partial) {
+                require $partial;
+            }
         });
     }
 }
