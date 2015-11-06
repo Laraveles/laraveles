@@ -21,9 +21,10 @@ class CreateUserHandlerTest extends TestCase
 
     public function testRegisterValidUser()
     {
+        $this->expectsEvents(UserWasCreated::class);
+
         $user = $this->handleCommand(['username' => 'Foo', 'password' => 'foobarbaz', 'email' => 'foo@bar.com']);
 
-        $this->expectsEvents(UserWasCreated::class);
         $this->assertInstanceOf(User::class, $user);
     }
 
