@@ -87,6 +87,14 @@ class CreateUserHandlerTest extends TestCase
         $this->assertTrue($user->isActive());
     }
 
+    public function testPasswordWillBeEncrypted()
+    {
+        $user = $this->handleCommand(['username' => 'Foo', 'password' => 'foobarbaz', 'email' => 'foo@bar.com']);
+
+        $this->assertNotEquals('foobarbaz', $user->password);
+        $this->assertEquals(60, strlen($user->password));
+    }
+
     protected function handleCommand($data)
     {
         return $this->handler->handle(new CreateUser($data));
