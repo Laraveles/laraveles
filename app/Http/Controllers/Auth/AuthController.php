@@ -24,10 +24,8 @@ class AuthController extends AbstractAuthController
     /**
      * Attempting login.
      *
-     * @param LoginRequest $request
-     *
-     * @param Auth         $authenticator
-     *
+     * @param AuthRequest $request
+     * @param Auth        $authenticator
      * @return string
      */
     public function authenticate(AuthRequest $request, Auth $authenticator)
