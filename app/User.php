@@ -58,12 +58,36 @@ class User extends Model implements AuthenticatableContract,
     }
 
     /**
+     * Activating the user.
+     *
+     * @return $this
+     */
+    public function activate()
+    {
+        $this->setAttribute('active', true);
+
+        return $this;
+    }
+
+    /**
+     * Deactivating the user.
+     *
+     * @return $this
+     */
+    public function deactivate()
+    {
+        $this->setAttribute('active', false);
+
+        return $this;
+    }
+
+    /**
      * Check if the user has been activated.
      *
      * @return mixed
      */
     public function isActive()
     {
-        return $this->getAttribute('active');
+        return $this->getAttribute('active') ?: false;
     }
 }
