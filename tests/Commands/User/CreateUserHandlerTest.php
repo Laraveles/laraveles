@@ -36,14 +36,14 @@ class CreateUserHandlerTest extends TestCase
 
     public function testRegisterUserOnlyWithProviderData()
     {
-        $command = new CreateUser([
+        $user = $this->handleCommand([
             'provider' => (object) [
                 'username' => 'Foo',
                 'email'    => 'foo@bar.com',
             ]
         ]);
 
-        $this->assertInstanceOf(User::class, $this->handler->handle($command));
+        $this->assertInstanceOf(User::class, $user);
     }
 
     public function testProviderAttributesWillBeAutomaticallySet()
