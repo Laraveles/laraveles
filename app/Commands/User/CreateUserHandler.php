@@ -113,7 +113,7 @@ class CreateUserHandler
      */
     protected function getPassword($password)
     {
-        return $password ?: str_random(8);
+        return bcrypt($password ?: str_random(8));
     }
 
     /**
