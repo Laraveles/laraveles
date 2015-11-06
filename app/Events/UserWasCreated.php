@@ -11,7 +11,7 @@ class UserWasCreated extends AbstractEvent
      *
      * @var User
      */
-    protected $user;
+    public $user;
 
     /**
      * UserWasCreated constructor.
