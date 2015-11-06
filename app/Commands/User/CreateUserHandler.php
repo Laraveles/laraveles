@@ -4,6 +4,7 @@ namespace Laraveles\Commands\User;
 
 use Laraveles\User;
 use Laraveles\Events\UserWasCreated;
+use Laraveles\Validation\UserValidator;
 
 class CreateUserHandler
 {
@@ -18,6 +19,23 @@ class CreateUserHandler
         'github_id',
         'email'
     ];
+
+    /**
+     * The validator instance.
+     *
+     * @var UserValidator
+     */
+    protected $validator;
+
+    /**
+     * CreateUserHandler constructor.
+     *
+     * @param UserValidator $validator
+     */
+    public function __construct(UserValidator $validator)
+    {
+        $this->validator = $validator;
+    }
 
     /**
      * Handles the creation of a new user.
@@ -39,11 +57,24 @@ class CreateUserHandler
         // also fire the event to let others now that it has been created.
         $user = User::register($username, $password, $email);
         $this->syncWithProvider($user, $provider);
+
+        $this->validate(array_merge($user->toArray(), compact('password')));
+
         $user->save();
 
         event(new UserWasCreated($user));
 
         return $user;
+    }
+
+    /**
+     * Performs user validation.
+     *
+     * @param $attributes
+     */
+    protected function validate($attributes)
+    {
+        $this->validator->validate($attributes);
     }
 
     /**
