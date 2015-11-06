@@ -21,10 +21,17 @@ class CreateUserHandlerTest extends TestCase
 
     public function testRegisterValidUser()
     {
-        $command = new CreateUser(['username' => 'Foo', 'password' => 'foobarbaz', 'email' => 'foo@bar.com']);
+        $user = $this->handleCommand(['username' => 'Foo', 'password' => 'foobarbaz', 'email' => 'foo@bar.com']);
 
         $this->expectsEvents(UserWasCreated::class);
-        $this->assertInstanceOf(User::class, $this->handler->handle($command));
+        $this->assertInstanceOf(User::class, $user);
+    }
+
+    public function testPasswordAttributeWillBeSetIfNotPresent()
+    {
+        $user = $this->handleCommand(['username' => 'Foo', 'email' => 'foo@bar.com']);
+
+        $this->assertNotEmpty($user->password);
     }
 
     public function testRegisterUserOnlyWithProviderData()
@@ -36,7 +43,6 @@ class CreateUserHandlerTest extends TestCase
             ]
         ]);
 
-        $this->expectsEvents(UserWasCreated::class);
         $this->assertInstanceOf(User::class, $this->handler->handle($command));
     }
 
