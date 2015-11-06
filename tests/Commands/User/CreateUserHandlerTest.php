@@ -56,7 +56,7 @@ class CreateUserHandlerTest extends TestCase
         $this->assertEquals('foo@bar.com', $user->email);
     }
 
-    public function testProviderAttributesDoesNotOverrideUserAttributes()
+    public function testProviderAttributesDoNotOverrideUserAttributes()
     {
         $user = $this->handleCommand([
             'username' => 'Foo',
