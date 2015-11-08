@@ -88,13 +88,14 @@ class CreateUserHandler
             return;
         }
 
-        // W'll set any attribute that is available into the provider data. We
-        // will also compare the provider email matches to the user email.
-        // If so, we assume it's real and let it register as activated.
-        if (isset($provider->email) &&
-            $provider->email == $user->getAttribute('email')
-        ) {
-            $user->activate();
+        // Setting any attribute available from the provider data to the model.
+        // Also checking if the email to be stored matches the one from the
+        // provider. If so assume it's valid and the user will be active.
+        if (isset($provider->email)) {
+            if (empty($userEmail = $user->getAttribute('email')) ||
+                $provider->email == $userEmail) {
+                $user->activate();
+            }
         }
 
         foreach ($this->providerAttributes as $key) {
