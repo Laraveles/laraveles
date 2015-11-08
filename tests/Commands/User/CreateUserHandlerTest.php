@@ -26,6 +26,7 @@ class CreateUserHandlerTest extends TestCase
         $user = $this->handleCommand(['username' => 'Foo', 'password' => 'foobarbaz', 'email' => 'foo@bar.com']);
 
         $this->assertInstanceOf(User::class, $user);
+        $this->seeInDatabase('users', ['username' => 'Foo']);
     }
 
     public function testPasswordAttributeWillBeSetIfNotPresent()
