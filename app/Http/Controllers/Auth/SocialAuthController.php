@@ -16,8 +16,6 @@ class SocialAuthController extends AbstractAuthController
      * SocialAuthController constructor.
      *
      * @param SocialAuthenticator $authenticator
-     *
-     * @internal param Socialite $socialite
      */
     public function __construct(SocialAuthenticator $authenticator)
     {
@@ -47,8 +45,7 @@ class SocialAuthController extends AbstractAuthController
     {
         try {
             $this->authenticator->authenticate($provider);
-        }
-        catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             // Redirect to the user register page
         }
 
