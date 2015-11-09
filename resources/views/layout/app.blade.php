@@ -8,6 +8,9 @@
 {{-- Navigation --}}
 @include('layouts.common.navigation')
 
+{{-- Notifications --}}
+@include('layouts.common.notifications')
+
 {{-- Main Content --}}
 @yield('content')
 
