@@ -31,16 +31,10 @@ class SocialAuthenticator
      *
      * @param Socialite                   $socialite
      * @param UserRepository              $user
-     * @param HandlesSocialAuthentication $handler
      */
-    public function __construct(
-        Socialite $socialite,
-        UserRepository $user,
-        HandlesSocialAuthentication $handler
-    ) {
+    public function __construct(Socialite $socialite, UserRepository $user) {
         $this->socialite = $socialite;
         $this->user = $user;
-        $this->handler = $handler;
     }
 
     /**
@@ -64,7 +58,8 @@ class SocialAuthenticator
     {
         try {
             $socialUser = $this->socialite->driver($provider)->user();
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             return $this->handler->errorFound();
         }
 

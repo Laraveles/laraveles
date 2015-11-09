@@ -54,7 +54,8 @@ class SocialAuthenticatorTest extends TestCase
         $user = m::mock(User::class);
         $repository = m::mock(UserRepository::class);
         $handler = m::mock(HandlesSocialAuthentication::class);
-        $authenticator = new SocialAuthenticator($socialite, $repository, $handler);
+        $authenticator = new SocialAuthenticator($socialite, $repository);
+        $authenticator->setHandler($handler);
 
         return [$authenticator, $socialite, $user, $repository, $handler];
     }
