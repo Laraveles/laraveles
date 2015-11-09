@@ -11,19 +11,28 @@ class SocialAuthenticatorTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function testAuthenticatesAnExistingUser()
+    public function testDrivesToUserExistsHandlerWhenUserExists()
     {
-        list($authenticator, $socialite, $auth, $repository, $handler) = $this->createInstances();
-        $user = m::mock(User::class);
+        list($authenticator, $socialite, $user, $repository, $handler) = $this->createInstances();
         $socialite->shouldReceive('driver')
-                  ->andReturn(new SocialProviderStub());
+                  ->andReturn(new SocialProviderStub);
         $repository->shouldReceive('findByProvider')
                    ->andReturn($user);
         $handler->shouldReceive('userExists')
                 ->once();
-        $auth->shouldReceive('login')
-             ->once()
-             ->with($user);
+
+        $authenticator->authenticate('github');
+    }
+    
+    public function testDrivesToUserDoNotExistsWhenUserDoNotExist()
+    {
+        list($authenticator, $socialite, , $repository, $handler) = $this->createInstances();
+        $socialite->shouldReceive('driver')
+                  ->andReturn(new SocialProviderStub);
+        $repository->shouldReceive('findByProvider')
+                   ->andReturn(null);
+        $handler->shouldReceive('userDoesNotExist')
+                ->once();
 
         $authenticator->authenticate('github');
     }
@@ -31,12 +40,12 @@ class SocialAuthenticatorTest extends TestCase
     protected function createInstances()
     {
         $socialite = m::mock('Laravel\Socialite\Contracts\Factory');
-        $auth = m::mock('Illuminate\Contracts\Auth\Guard');
+        $user = m::mock(User::class);
         $repository = m::mock(UserRepository::class);
         $handler = m::mock(HandlesSocialAuthentication::class);
-        $authenticator = new SocialAuthenticator($socialite, $auth, $repository, $handler);
+        $authenticator = new SocialAuthenticator($socialite, $repository, $handler);
 
-        return [$authenticator, $socialite, $auth, $repository, $handler];
+        return [$authenticator, $socialite, $user, $repository, $handler];
     }
 }
 

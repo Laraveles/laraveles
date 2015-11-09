@@ -7,13 +7,6 @@ use Laravel\Socialite\Contracts\Factory as Socialite;
 class SocialAuthenticator
 {
     /**
-     * Guard instance.
-     *
-     * @var Auth
-     */
-    protected $auth;
-
-    /**
      * Socialite instance.
      *
      * @var Socialite
@@ -38,18 +31,15 @@ class SocialAuthenticator
      * SocialAuthenticator constructor.
      *
      * @param Socialite                   $socialite
-     * @param Auth                        $auth
      * @param UserRepository              $user
      * @param HandlesSocialAuthentication $handler
      */
     public function __construct(
         Socialite $socialite,
-        Auth $auth,
         UserRepository $user,
         HandlesSocialAuthentication $handler
     ) {
         $this->socialite = $socialite;
-        $this->auth = $auth;
         $this->user = $user;
         $this->handler = $handler;
     }
@@ -83,13 +73,13 @@ class SocialAuthenticator
     /**
      * Gets the user from database if exists.
      *
+     * @param $provider
      * @param $socialUser
      * @return mixed
      */
     protected function findUser($provider, $socialUser)
     {
         if ($user = $this->getUser($provider, $socialUser)) {
-            $this->auth->login($user);
             return $this->handler->userExists($user);
         }
 
@@ -116,5 +106,15 @@ class SocialAuthenticator
     protected function getUser($provider, $user)
     {
         return $this->user->findByProvider($provider, $user);
+    }
+
+    /**
+     * Set the authenticaton handler.
+     *
+     * @param HandlesSocialAuthentication $handler
+     */
+    public function setHandler(HandlesSocialAuthentication $handler)
+    {
+        $this->handler = $handler;
     }
 }
