@@ -2,12 +2,16 @@
 
 namespace Laraveles\Http\Controllers\Auth;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Laraveles\User;
+use Laraveles\Commands\User\CreateUser;
 use Laraveles\Services\Auth\SocialAuthenticator;
+use Laraveles\Services\Auth\HandlesSocialAuthentication;
 
-class SocialAuthController extends AbstractAuthController
+class SocialAuthController extends AbstractAuthController implements HandlesSocialAuthentication
 {
     /**
+     * The social authenticator instance.
+     *
      * @var SocialAuthenticator
      */
     protected $authenticator;
@@ -19,6 +23,7 @@ class SocialAuthController extends AbstractAuthController
      */
     public function __construct(SocialAuthenticator $authenticator)
     {
+        $authenticator->setHandler($this);
         $this->authenticator = $authenticator;
     }
 
@@ -43,12 +48,44 @@ class SocialAuthController extends AbstractAuthController
      */
     public function callback($provider)
     {
-        try {
-            $this->authenticator->authenticate($provider);
-        } catch (ModelNotFoundException $e) {
-            // Redirect to the user register page
-        }
+        $this->authenticator->authenticate($provider);
+    }
 
-        return $this->afterLoginRedirect();
+    /**
+     * Handling any error found during the authentication process.
+     *
+     * @return mixed
+     */
+    public function errorFound()
+    {
+        return view('auth.login')->withErrors([
+            'error' => 'Ocurrió un error con el proveedor social.'
+        ]);
+    }
+
+    /**
+     * Handling user was found in database.
+     *
+     * @param $user
+     * @return mixed
+     */
+    public function userExists(User $user)
+    {
+        $this->loginAndRedirect($user);
+    }
+
+    /**
+     * Not able to found a user in database handler.
+     *
+     * @param $socialUser
+     * @return mixed
+     */
+    public function userDoesNotExist($socialUser)
+    {
+        $createUser = new CreateUser(['provider' => $socialUser]);
+
+        $user = $this->dispatch($createUser);
+
+        return $this->loginAndRedirect($user);
     }
 }
