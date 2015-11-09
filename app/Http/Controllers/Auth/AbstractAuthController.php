@@ -39,13 +39,36 @@ abstract class AbstractAuthController extends Controller
     }
 
     /**
-     * Formulario de login.
+     * Login form.
      *
      * @return \Illuminate\View\View
      */
     public function index()
     {
         return view('site.auth.login');
+    }
+
+    /**
+     * Login in the given user.
+     *
+     * @param User $user
+     */
+    protected function login(User $user)
+    {
+        $this->auth->login($user);
+    }
+
+    /**
+     * Logging user in and redirecting.
+     *
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function loginAndRedirect(User $user)
+    {
+        $this->login($user);
+
+        return $this->afterLoginRedirect();
     }
 
     /**

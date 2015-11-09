@@ -2,6 +2,8 @@
 
 namespace Laraveles\Services\Auth;
 
+use Laraveles\User;
+
 interface HandlesSocialAuthentication
 {
     /**
@@ -14,15 +16,16 @@ interface HandlesSocialAuthentication
     /**
      * Handling user was found in database.
      *
-     * @param $user
+     * @param User $user
      * @return mixed
      */
-    public function userExists($user);
+    public function userExists(User $user);
 
     /**
      * Not able to found a user in database handler.
      *
+     * @param $socialUser
      * @return mixed
      */
-    public function userDoesNotExist();
+    public function userDoesNotExist($socialUser);
 }

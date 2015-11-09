@@ -86,7 +86,7 @@ class SocialAuthenticator
             return $this->handler->userExists($user);
         }
 
-        return $this->handler->userDoesNotExist();
+        return $this->handler->userDoesNotExist($socialUser);
     }
 
     /**
