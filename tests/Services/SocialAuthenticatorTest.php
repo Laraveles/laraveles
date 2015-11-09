@@ -36,6 +36,17 @@ class SocialAuthenticatorTest extends TestCase
 
         $authenticator->authenticate('github');
     }
+
+    public function testDrivesToErrorFoundIfAuthenticationFails()
+    {
+        list($authenticator, $socialite, , , $handler) = $this->createInstances();
+        $socialite->shouldReceive('driver')
+                  ->andThrow(new Exception);
+        $handler->shouldReceive('errorFound')
+                ->once();
+
+        $authenticator->authenticate('github');
+    }
     
     protected function createInstances()
     {

@@ -62,7 +62,7 @@ class SocialAuthenticator
         try {
             $socialUser = $this->socialite->driver($provider)->user();
         } catch (\Exception $e) {
-            $this->handler->errorFound();
+            return $this->handler->errorFound();
         }
 
         $this->formatUser($socialUser);
