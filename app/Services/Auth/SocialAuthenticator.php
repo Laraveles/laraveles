@@ -1,7 +1,6 @@
 <?php namespace Laraveles\Services\Auth;
 
 use Laraveles\Repositories\UserRepository;
-use Illuminate\Contracts\Auth\Guard as Auth;
 use Laravel\Socialite\Contracts\Factory as Socialite;
 
 class SocialAuthenticator
@@ -45,6 +44,8 @@ class SocialAuthenticator
     }
 
     /**
+     * Authentication request to the provider.
+     *
      * @param $provider
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -54,6 +55,8 @@ class SocialAuthenticator
     }
 
     /**
+     * Check if user exists in the system.
+     *
      * @param $provider
      * @return bool
      */
