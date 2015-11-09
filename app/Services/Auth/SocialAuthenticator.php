@@ -1,7 +1,6 @@
 <?php namespace Laraveles\Services\Auth;
 
 use Laraveles\Repositories\UserRepository;
-use Laraveles\User;
 use Illuminate\Contracts\Auth\Guard as Auth;
 use Laravel\Socialite\Contracts\Factory as Socialite;
 
@@ -26,28 +25,37 @@ class SocialAuthenticator
      *
      * @var UserRepository
      */
-    private $user;
+    protected $user;
+
+    /**
+     * Authentication handler instance.
+     *
+     * @var HandlesSocialAuthentication
+     */
+    protected $handler;
 
     /**
      * SocialAuthenticator constructor.
      *
-     * @param Socialite      $socialite
-     * @param Auth           $auth
-     * @param UserRepository $user
+     * @param Socialite                   $socialite
+     * @param Auth                        $auth
+     * @param UserRepository              $user
+     * @param HandlesSocialAuthentication $handler
      */
     public function __construct(
         Socialite $socialite,
         Auth $auth,
-        UserRepository $user
+        UserRepository $user,
+        HandlesSocialAuthentication $handler
     ) {
         $this->socialite = $socialite;
         $this->auth = $auth;
         $this->user = $user;
+        $this->handler = $handler;
     }
 
     /**
      * @param $provider
-     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function redirectToProvider($provider)
@@ -57,20 +65,35 @@ class SocialAuthenticator
 
     /**
      * @param $provider
-     *
      * @return bool
      */
     public function authenticate($provider)
     {
-        $socialUser = $this->socialite->driver($provider)->user();
+        try {
+            $socialUser = $this->socialite->driver($provider)->user();
+        } catch (\Exception $e) {
+            $this->handler->errorFound();
+        }
 
         $this->formatUser($socialUser);
 
+        return $this->findUser($provider, $socialUser);
+    }
+
+    /**
+     * Gets the user from database if exists.
+     *
+     * @param $socialUser
+     * @return mixed
+     */
+    protected function findUser($provider, $socialUser)
+    {
         if ($user = $this->getUser($provider, $socialUser)) {
             $this->auth->login($user);
+            return $this->handler->userExists($user);
         }
 
-        return $user;
+        return $this->handler->userDoesNotExist();
     }
 
     /**

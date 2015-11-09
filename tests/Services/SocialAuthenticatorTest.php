@@ -5,6 +5,7 @@ use Laraveles\User;
 use Laraveles\Repositories\UserRepository;
 use Laraveles\Services\Auth\SocialAuthenticator;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Laraveles\Services\Auth\HandlesSocialAuthentication;
 
 class SocialAuthenticatorTest extends TestCase
 {
@@ -12,12 +13,14 @@ class SocialAuthenticatorTest extends TestCase
 
     public function testAuthenticatesAnExistingUser()
     {
-        list($authenticator, $socialite, $auth, $repository) = $this->createInstances();
+        list($authenticator, $socialite, $auth, $repository, $handler) = $this->createInstances();
         $user = m::mock(User::class);
         $socialite->shouldReceive('driver')
                   ->andReturn(new SocialProviderStub());
         $repository->shouldReceive('findByProvider')
                    ->andReturn($user);
+        $handler->shouldReceive('userExists')
+                ->once();
         $auth->shouldReceive('login')
              ->once()
              ->with($user);
@@ -30,9 +33,10 @@ class SocialAuthenticatorTest extends TestCase
         $socialite = m::mock('Laravel\Socialite\Contracts\Factory');
         $auth = m::mock('Illuminate\Contracts\Auth\Guard');
         $repository = m::mock(UserRepository::class);
-        $authenticator = new SocialAuthenticator($socialite, $auth, $repository);
+        $handler = m::mock(HandlesSocialAuthentication::class);
+        $authenticator = new SocialAuthenticator($socialite, $auth, $repository, $handler);
 
-        return [$authenticator, $socialite, $auth, $repository];
+        return [$authenticator, $socialite, $auth, $repository, $handler];
     }
 }
 
