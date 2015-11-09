@@ -3,6 +3,7 @@
 namespace Laraveles\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Bus\Dispatcher;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +14,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Registering how command bus should map to their handlers.
+        $this->app->make(Dispatcher::class)->mapUsing(function ($command) {
+            return get_class($command).'Handler@handle';
+        });
     }
 
     /**
