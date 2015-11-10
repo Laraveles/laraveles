@@ -6,4 +6,9 @@ php:
 
 install: travis_retry composer install --no-interaction --prefer-source
 
-script: vendor/bin/phpunit
+before_script:
+  - npm install -g gulp
+
+script:
+  - gulp sass
+  - vendor/bin/phpunit
