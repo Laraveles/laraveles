@@ -12,4 +12,5 @@ before_script:
 
 script:
   - gulp sass
+  - gulp version
   - vendor/bin/phpunit
