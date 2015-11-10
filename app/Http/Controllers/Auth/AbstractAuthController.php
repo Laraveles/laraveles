@@ -2,6 +2,7 @@
 
 namespace Laraveles\Http\Controllers\Auth;
 
+use Laraveles\User;
 use Laraveles\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard as Auth;
 
@@ -36,6 +37,8 @@ abstract class AbstractAuthController extends Controller
     public function __construct(Auth $auth)
     {
         $this->auth = $auth;
+
+        $this->middleware('guest', ['except' => 'logout']);
     }
 
     /**
@@ -45,7 +48,7 @@ abstract class AbstractAuthController extends Controller
      */
     public function index()
     {
-        return view('site.auth.login');
+        return view('auth.login');
     }
 
     /**
