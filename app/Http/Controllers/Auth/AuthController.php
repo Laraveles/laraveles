@@ -2,7 +2,10 @@
 
 namespace Laraveles\Http\Controllers\Auth;
 
+use Illuminate\Support\Facades\Lang;
+use Laraveles\Http\Requests\AuthRequest;
 use Laraveles\Http\Requests\UserRequest;
+use Illuminate\Contracts\Auth\Guard as Auth;
 
 class AuthController extends AbstractAuthController
 {
@@ -14,14 +17,6 @@ class AuthController extends AbstractAuthController
     protected $username = 'username';
 
     /**
-     * AuthController constructor.
-     */
-    public function __construct()
-    {
-        $this->middleware('guest', ['except' => 'logout']);
-    }
-
-    /**
      * Attempting login.
      *
      * @param AuthRequest $request
@@ -30,7 +25,7 @@ class AuthController extends AbstractAuthController
      */
     public function authenticate(AuthRequest $request, Auth $authenticator)
     {
-        $credentials = $request->only($this->username, 'password');
+        $credentials = $this->getCredentials($request);
 
         // We'll try to authenticate the user. If OK, the authenticated user
         // will be redirected to the URL it was trying to get or just the
@@ -44,5 +39,24 @@ class AuthController extends AbstractAuthController
                     ->withErrors([
                         $this->username => Lang::get('auth.failed')
                     ]);
+    }
+
+    /**
+     * Getting the credentials from the request. Will also swap the credential
+     * username based on the input (username / email).
+     *
+     * @param $request
+     * @return mixed
+     */
+    protected function getCredentials($request)
+    {
+        $credentials = $request->only($this->username, 'password');
+
+        if (filter_var($credentials[$this->username], FILTER_VALIDATE_EMAIL)) {
+            $credentials['email'] = $credentials['username'];
+            unset($credentials['username']);
+        }
+
+        return $credentials;
     }
 }
