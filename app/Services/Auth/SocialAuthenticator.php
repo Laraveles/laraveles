@@ -29,10 +29,11 @@ class SocialAuthenticator
     /**
      * SocialAuthenticator constructor.
      *
-     * @param Socialite                   $socialite
-     * @param UserRepository              $user
+     * @param Socialite      $socialite
+     * @param UserRepository $user
      */
-    public function __construct(Socialite $socialite, UserRepository $user) {
+    public function __construct(Socialite $socialite, UserRepository $user)
+    {
         $this->socialite = $socialite;
         $this->user = $user;
     }
@@ -63,7 +64,7 @@ class SocialAuthenticator
             return $this->handler->errorFound();
         }
 
-        $this->formatUser($socialUser);
+        $this->formatUser($provider, $socialUser);
 
         return $this->findUser($provider, $socialUser);
     }
@@ -77,7 +78,7 @@ class SocialAuthenticator
      */
     protected function findUser($provider, $socialUser)
     {
-        if ($user = $this->getUser($provider, $socialUser)) {
+        if ($user = $this->getUser($provider, $socialUser->getId())) {
             return $this->handler->userExists($user);
         }
 
@@ -89,9 +90,15 @@ class SocialAuthenticator
      *
      * @param $user
      */
-    protected function formatUser($user)
+    protected function formatUser($provider, $user)
     {
+        // Setting the provider name + _id field will match the convention used
+        // for storing the unique provider user identification number in the
+        // users table. As an example: github_id, google_id, facebook_id.
+        $field = $provider . '_id';
+
         $user->username = $user->getNickname();
+        $user->{$field} = $user->getId();
     }
 
     /**

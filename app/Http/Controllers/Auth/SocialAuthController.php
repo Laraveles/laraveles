@@ -4,6 +4,7 @@ namespace Laraveles\Http\Controllers\Auth;
 
 use Laraveles\User;
 use Laraveles\Commands\User\CreateUser;
+use Illuminate\Contracts\Auth\Guard as Auth;
 use Laraveles\Services\Auth\SocialAuthenticator;
 use Laraveles\Services\Auth\HandlesSocialAuthentication;
 
@@ -21,10 +22,12 @@ class SocialAuthController extends AbstractAuthController implements HandlesSoci
      *
      * @param SocialAuthenticator $authenticator
      */
-    public function __construct(SocialAuthenticator $authenticator)
+    public function __construct(Auth $auth, SocialAuthenticator $authenticator)
     {
         $authenticator->setHandler($this);
         $this->authenticator = $authenticator;
+
+        parent::__construct($auth);
     }
 
     /**
@@ -48,7 +51,7 @@ class SocialAuthController extends AbstractAuthController implements HandlesSoci
      */
     public function callback($provider)
     {
-        $this->authenticator->authenticate($provider);
+        return $this->authenticator->authenticate($provider);
     }
 
     /**
@@ -58,7 +61,7 @@ class SocialAuthController extends AbstractAuthController implements HandlesSoci
      */
     public function errorFound()
     {
-        return view('auth.login')->withErrors([
+        return view('auth.auth')->withErrors([
             'error' => 'Ocurrió un error con el proveedor social.'
         ]);
     }
@@ -71,7 +74,7 @@ class SocialAuthController extends AbstractAuthController implements HandlesSoci
      */
     public function userExists(User $user)
     {
-        $this->loginAndRedirect($user);
+        return $this->loginAndRedirect($user);
     }
 
     /**

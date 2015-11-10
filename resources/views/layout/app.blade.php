@@ -2,22 +2,22 @@
 <html lang="en">
 <head>
     {{-- Head Content --}}
-    @include('layouts.common.head')
+    @include('layout.common.head')
 </head>
 <body>
 {{-- Navigation --}}
-@include('layouts.common.navigation')
+{{--@include('layout.common.navigation')--}}
 
 {{-- Notifications --}}
-@include('layouts.common.notifications')
+@include('layout.common.notifications')
 
 {{-- Main Content --}}
 @yield('content')
 
 {{-- Footer --}}
-@include('common.footer')
+@include('layout.common.footer')
 
 {{-- JavaScript Application --}}
-<script src="{{ elixir('js/app.js') }}"></script>
+{{--<script src="{{ elixir('js/app.js') }}"></script>--}}
 </body>
 </html>

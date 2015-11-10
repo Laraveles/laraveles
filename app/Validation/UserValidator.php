@@ -12,7 +12,7 @@ class UserValidator extends AbstractValidator
     public function rules()
     {
         return [
-            'username' => 'required|alpha_dash|unique:users|min:3|max:30',
+            'username' => 'alpha_dash|unique:users|min:3|max:30',
             'password' => 'required|min:8',
             'email'    => 'required|email|unique:users'
         ];
