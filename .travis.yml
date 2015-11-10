@@ -8,6 +8,7 @@ install: travis_retry composer install --no-interaction --prefer-source
 
 before_script:
   - npm install -g gulp
+  - npm install
 
 script:
   - gulp sass
