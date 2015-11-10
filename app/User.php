@@ -41,7 +41,7 @@ class User extends Model implements AuthenticatableContract,
     {
         $field = $provider . '_id';
 
-        return static::where($field, $identifier)->firstOrFail();
+        return static::where($field, $identifier)->first();
     }
 
     /**
