@@ -4,59 +4,43 @@ namespace Laraveles\Http\Controllers\Auth;
 
 use Illuminate\Support\Facades\Lang;
 use Laraveles\Http\Requests\AuthRequest;
-use Laraveles\Http\Requests\UserRequest;
-use Illuminate\Contracts\Auth\Guard as Auth;
+use Laraveles\Commands\Auth\AuthenticateUser;
+use Laraveles\Exceptions\Auth\InactiveUserException;
 
 class AuthController extends AbstractAuthController
 {
     /**
-     * User username to login by.
-     *
-     * @var string
-     */
-    protected $username = 'username';
-
-    /**
      * Attempting login.
      *
      * @param AuthRequest $request
-     * @param Auth        $authenticator
      * @return string
      */
-    public function authenticate(AuthRequest $request, Auth $authenticator)
+    public function authenticate(AuthRequest $request)
     {
-        $credentials = $this->getCredentials($request);
 
-        // We'll try to authenticate the user. If OK, the authenticated user
-        // will be redirected to the URL it was trying to get or just the
-        // default route. If any error the user goes back to the login.
-        if ($authenticator->attempt($credentials, $request->has('remember'))) {
-            return $this->afterLoginRedirect();
+        try {
+            $access = $this->dispatchFromArray(
+                AuthenticateUser::class, $request->only('username', 'password', 'remember')
+            );
+
+            // We'll try to authenticate the user. If OK, the authenticated user
+            // will be redirected to the URL it was trying to get or just the
+            // default route. If any error the user goes back to the login.
+            if (! $access) {
+                return $this->loginRedirect()
+                            ->withInput($request->only('username', 'remember'))
+                            ->withErrors([
+                                'error' => Lang::get('auth.failed')
+                            ]);
+            }
+        }
+        catch (InactiveUserException $e) {
+            return $this->loginRedirect()
+                        ->withErrors([
+                            'error' => Lang::get('auth.inactive')
+                        ]);
         }
 
-        return $this->loginRedirect()
-                    ->withInput($request->only($this->username, 'remember'))
-                    ->withErrors([
-                        $this->username => Lang::get('auth.failed')
-                    ]);
-    }
-
-    /**
-     * Getting the credentials from the request. Will also swap the credential
-     * username based on the input (username / email).
-     *
-     * @param $request
-     * @return mixed
-     */
-    protected function getCredentials($request)
-    {
-        $credentials = $request->only($this->username, 'password');
-
-        if (filter_var($credentials[$this->username], FILTER_VALIDATE_EMAIL)) {
-            $credentials['email'] = $credentials['username'];
-            unset($credentials['username']);
-        }
-
-        return $credentials;
+        return $this->afterLoginRedirect();
     }
 }
