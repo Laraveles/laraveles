@@ -58,8 +58,6 @@ class SocialAuthenticateUserHandler extends Command
 
         $user = $this->socialite->driver($driver)->user();
 
-//        $this->formatObject($driver, $user);
-
         // After retrieving the user details from the OAuth provider, we'll add
         // some standard formatting. If the user is found in our records, we
         // will just autentify it. Otherwise, exceptions will be thrown.
@@ -68,27 +66,11 @@ class SocialAuthenticateUserHandler extends Command
         );
         if ($localUser) {
             $this->auth->login($localUser);
+
             return $localUser;
         }
 
         throw new SocialUserNotFoundException($user);
-    }
-
-    /**
-     * Formatting the provider user with custom attributes.
-     *
-     * @param $driver
-     * @param $user
-     */
-    protected function formatObject($driver, $user)
-    {
-        // Setting the provider name + _id field will match the convention used
-        // for storing the unique provider user identification number in the
-        // users table. As an example: github_id, google_id, facebook_id.
-        $field = $driver . '_id';
-
-        $user->username = $user->getNickname();
-        $user->{$field} = $user->getId();
     }
 
     /**
@@ -100,12 +82,35 @@ class SocialAuthenticateUserHandler extends Command
      * @return mixed
      * @throws \ModelNotFoundException
      */
-    protected function findUser($driver, $identifier, $email)
+    protected function findUser($driver, $identifier, $email = null)
     {
-        try {
-            return $this->user->findByProviderOrEmail($driver, $identifier, $email);
-        } catch (\ModelNotFoundException $e) {
-            throw $e;
+        if ($user = $this->user->findByProviderOrEmail($driver, $identifier, $email)) {
+            $this->sync($user, $driver, $identifier, $email);
         }
+
+        return $user;
+    }
+
+    /**
+     * In case the user was already existing into the database, we'll sync
+     * the provider id and the email with the data provided by the OAuth.
+     *
+     * @param $user
+     * @param $driver
+     * @param $identifier
+     * @param $email
+     */
+    protected function sync($user, $driver, $identifier, $email = null)
+    {
+        $field = $driver . '_id';
+
+        if (! is_null($email) && empty($user->getAttribute('email'))) {
+            $user->setAttribute('email', $email);
+        }
+        if (empty($user->getAttribute($field))) {
+            $user->setAttribute($field, $identifier);
+        }
+
+        $user->save();
     }
 }

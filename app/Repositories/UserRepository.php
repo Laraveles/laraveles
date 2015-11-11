@@ -31,6 +31,6 @@ class UserRepository
             });
         }
 
-        return $query->firstOrFail();
+        return $query->first();
     }
 }

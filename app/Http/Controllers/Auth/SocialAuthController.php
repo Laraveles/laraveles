@@ -4,8 +4,9 @@ namespace Laraveles\Http\Controllers\Auth;
 
 use Laraveles\Commands\User\CreateUser;
 use Illuminate\Contracts\Auth\Guard as Auth;
+use Laraveles\Commands\Auth\SocialAuthenticateUser;
 use Laravel\Socialite\Contracts\Factory as Socialite;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Laraveles\Exceptions\Auth\SocialUserNotFoundException;
 
 class SocialAuthController extends AbstractAuthController
 {
@@ -42,19 +43,17 @@ class SocialAuthController extends AbstractAuthController
     /**
      * Social provider response.
      *
-     * @param $provider
+     * @param $driver
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function callback($provider)
+    public function callback($driver)
     {
         try {
-            $this->dispatch(new SocialAuthenticateUser($provider));
-            $this->afterLoginRedirect();
-        } catch (ModelNotFoundException $e) {
-            $user = $this->socialite->driver($provider)->user();
-
-            return $this->createAndLogin($user);
+            $this->dispatch(new SocialAuthenticateUser($driver));
+            return $this->afterLoginRedirect();
+        } catch (SocialUserNotFoundException $e) {
+            return $this->createAndLogin($driver, $e->getUser());
         } catch (\Exception $e) {
             return $this->errorFound();
         }
@@ -68,18 +67,21 @@ class SocialAuthController extends AbstractAuthController
     public function errorFound()
     {
         return $this->loginRedirect()->withErrors([
-            'error' => Lang::get('auth.oauth-error')
+            'error' => \Lang::get('auth.oauth-error')
         ]);
     }
 
     /**
      * Creates the user and logges it in.
      *
+     * @param $driver
      * @param $provider
-     * @return mixed
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function createAndLogin($provider)
+    public function createAndLogin($driver, $provider)
     {
+        $provider->driver = $driver;
+
         $user = $this->dispatch(
             new CreateUser(compact('provider'))
         );

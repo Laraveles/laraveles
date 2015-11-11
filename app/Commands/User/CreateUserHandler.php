@@ -14,9 +14,11 @@ class CreateUserHandler
      * @var array
      */
     protected $providerAttributes = [
+        'name',
         'username',
         'avatar',
         'github_id',
+        'google_id',
         'email'
     ];
 
@@ -80,12 +82,17 @@ class CreateUserHandler
     /**
      * Sync the user model with the provider data.
      *
-     * @param $user
+     * @param      $user
+     * @param null $provider
      */
     protected function syncWithProvider($user, $provider = null)
     {
-        if ( ! isset($provider)) {
+        if (! isset($provider)) {
             return;
+        }
+
+        if (isset($provider->driver)) {
+            $this->formatObject($user, $provider);
         }
 
         // Setting any attribute available from the provider data to the model.
@@ -93,16 +100,49 @@ class CreateUserHandler
         // provider. If so assume it's valid and the user will be active.
         if (isset($provider->email)) {
             if (empty($userEmail = $user->getAttribute('email')) ||
-                $provider->email == $userEmail) {
+                $provider->email == $userEmail
+            ) {
                 $user->activate();
             }
         }
 
         foreach ($this->providerAttributes as $key) {
-            if ( ! isset($user->$key) && isset($provider->$key)) {
-                $user->$key = $provider->$key;
+            if (! isset($user->$key) && isset($provider->$key)) {
+                $user->setAttribute($key, $provider->$key);
             }
         }
+    }
+
+    /**
+     * Formatting the provider user with custom attributes.
+     *
+     * @param $user
+     * @param $provider
+     */
+    protected function formatObject($user, $provider)
+    {
+        // Setting the provider name + _id field will match the convention used
+        // for storing the unique provider user identification number in the
+        // users table. As an example: github_id, google_id, facebook_id.
+        $field = $provider->driver . '_id';
+
+        $user->setAttribute($field, $provider->getId());
+
+        if (! $this->usernameExists($provider->getNickname())) {
+            $user->setAttribute('username', $provider->getNickname());
+        }
+    }
+
+    /**
+     * Will check if the username is already taken by another user.
+     *
+     * @param $username
+     * @return mixed
+     */
+    protected function usernameExists($username)
+    {
+        return User::where('username', $username)
+                   ->count();
     }
 
     /**
