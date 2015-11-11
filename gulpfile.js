@@ -16,5 +16,7 @@ elixir(function(mix) {
 
     mix.phpUnit();
 
+    mix.phpSpec();
+
     mix.version('css/app.css');
 });
