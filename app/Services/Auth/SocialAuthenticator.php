@@ -88,6 +88,7 @@ class SocialAuthenticator
     /**
      * Formatting the provider user with custom attributes.
      *
+     * @param $provider
      * @param $user
      */
     protected function formatUser($provider, $user)
