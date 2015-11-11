@@ -2,31 +2,28 @@
 
 namespace Laraveles\Http\Controllers\Auth;
 
-use Laraveles\User;
 use Laraveles\Commands\User\CreateUser;
 use Illuminate\Contracts\Auth\Guard as Auth;
-use Laraveles\Services\Auth\SocialAuthenticator;
-use Laraveles\Services\Auth\HandlesSocialAuthentication;
+use Laravel\Socialite\Contracts\Factory as Socialite;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class SocialAuthController extends AbstractAuthController implements HandlesSocialAuthentication
+class SocialAuthController extends AbstractAuthController
 {
     /**
-     * The social authenticator instance.
-     *
-     * @var SocialAuthenticator
+     * @var Socialite
      */
-    protected $authenticator;
+    private $socialite;
 
     /**
      * SocialAuthController constructor.
      *
-     * @param SocialAuthenticator $authenticator
+     * @param Auth      $auth
+     * @param Socialite $socialite
+     * @internal param Factory $authenticator
      */
-    public function __construct(Auth $auth, SocialAuthenticator $authenticator)
+    public function __construct(Auth $auth, Socialite $socialite)
     {
-        $authenticator->setHandler($this);
-        $this->authenticator = $authenticator;
-
+        $this->socialite = $socialite;
         parent::__construct($auth);
     }
 
@@ -39,7 +36,7 @@ class SocialAuthController extends AbstractAuthController implements HandlesSoci
      */
     public function redirect($provider)
     {
-        return $this->authenticator->redirectToProvider($provider);
+        return $this->socialite->driver($provider)->redirect();
     }
 
     /**
@@ -51,7 +48,16 @@ class SocialAuthController extends AbstractAuthController implements HandlesSoci
      */
     public function callback($provider)
     {
-        return $this->authenticator->authenticate($provider);
+        try {
+            $this->dispatch(new SocialAuthenticateUser($provider));
+            $this->afterLoginRedirect();
+        } catch (ModelNotFoundException $e) {
+            $user = $this->socialite->driver($provider)->user();
+
+            return $this->createAndLogin($user);
+        } catch (\Exception $e) {
+            return $this->errorFound();
+        }
     }
 
     /**
@@ -61,34 +67,28 @@ class SocialAuthController extends AbstractAuthController implements HandlesSoci
      */
     public function errorFound()
     {
-        return view('auth.auth')->withErrors([
-            'error' => 'Ocurrió un error con el proveedor social.'
+        return $this->loginRedirect()->withErrors([
+            'error' => Lang::get('auth.oauth-error')
         ]);
     }
 
     /**
-     * Handling user was found in database.
+     * Creates the user and logges it in.
      *
-     * @param $user
+     * @param $provider
      * @return mixed
      */
-    public function userExists(User $user)
+    public function createAndLogin($provider)
     {
-        return $this->loginAndRedirect($user);
-    }
+        $user = $this->dispatch(
+            new CreateUser(compact('provider'))
+        );
 
-    /**
-     * Not able to found a user in database handler.
-     *
-     * @param $socialUser
-     * @return mixed
-     */
-    public function userDoesNotExist($socialUser)
-    {
-        $createUser = new CreateUser(['provider' => $socialUser]);
+        // If the user was not found in our records, we'll just create a new one
+        // based on the information given by the OAuth provider. Once created
+        // we will log it in as we assume it is a valid and activated user.
+        $this->auth->login($user);
 
-        $user = $this->dispatch($createUser);
-
-        return $this->loginAndRedirect($user);
+        return $this->afterLoginRedirect();
     }
 }

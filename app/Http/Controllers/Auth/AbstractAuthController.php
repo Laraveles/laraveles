@@ -2,7 +2,6 @@
 
 namespace Laraveles\Http\Controllers\Auth;
 
-use Laraveles\User;
 use Laraveles\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard as Auth;
 
@@ -49,29 +48,6 @@ abstract class AbstractAuthController extends Controller
     public function index()
     {
         return view('auth.login');
-    }
-
-    /**
-     * Login in the given user.
-     *
-     * @param User $user
-     */
-    protected function login(User $user)
-    {
-        $this->auth->login($user);
-    }
-
-    /**
-     * Logging user in and redirecting.
-     *
-     * @param User $user
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    protected function loginAndRedirect(User $user)
-    {
-        $this->login($user);
-
-        return $this->afterLoginRedirect();
     }
 
     /**
