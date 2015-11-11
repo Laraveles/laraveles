@@ -9,7 +9,7 @@ class AuthControllerTest extends TestCase
 
     public function test_I_can_not_access_to_login_page_if_I_am_authentified()
     {
-        $user = $this->createBasicUser();
+        $user = $this->createActiveUser();
 
         $this->visitLoginRoute()
              ->see('Identifícate');
@@ -21,7 +21,7 @@ class AuthControllerTest extends TestCase
 
     public function test_I_can_login_using_username()
     {
-        $this->createBasicUser();
+        $this->createActiveUser();
 
         $this->visitLoginRoute()
              ->type('laraveles', 'username')
@@ -32,7 +32,7 @@ class AuthControllerTest extends TestCase
 
     public function test_I_can_login_using_email()
     {
-        $this->createBasicUser();
+        $this->createActiveUser();
 
         $this->visitLoginRoute()
              ->type('foo@bar.com', 'username')
@@ -41,12 +41,31 @@ class AuthControllerTest extends TestCase
              ->seePageIsHome();
     }
 
-    protected function createBasicUser()
+    public function test_I_can_not_login_if_user_is_not_activated()
+    {
+        $this->createInactiveUser();
+
+        $this->visitLoginRoute()
+             ->type('laraveles', 'username')
+             ->type('foobarbaz', 'password')
+             ->pressAccess()
+             ->seePageIs(route('auth.login'));
+    }
+
+    protected function createInactiveUser()
+    {
+        $user = $this->createActiveUser();
+        $user->active = false;
+        $user->save();
+    }
+
+    protected function createActiveUser()
     {
         return factory(User::class)->create([
             'username' => 'laraveles',
             'email'    => 'foo@bar.com',
-            'password' => Hash::make('foobarbaz')
+            'password' => Hash::make('foobarbaz'),
+            'active'   => 1
         ]);
     }
 
