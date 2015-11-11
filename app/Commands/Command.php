@@ -2,7 +2,7 @@
 
 namespace Laraveles\Commands;
 
-use Illuminate\Events\Dispatcher;
+use Illuminate\Contracts\Events\Dispatcher;
 
 abstract class Command
 {
