@@ -2,14 +2,14 @@
 
 namespace Laraveles\Commands\Auth;
 
-use Laraveles\Commands\Command;
 use Illuminate\Contracts\Auth\Guard;
+use Laraveles\Commands\CommandHandler;
 use Laraveles\Repositories\UserRepository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Laravel\Socialite\Contracts\Factory as Socialite;
 use Laraveles\Exceptions\Auth\SocialUserNotFoundException;
 
-class SocialAuthenticateUserHandler extends Command
+class SocialAuthenticateUserHandler extends CommandHandler
 {
     /**
      * @var Guard

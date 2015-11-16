@@ -2,12 +2,12 @@
 
 namespace Laraveles\Commands\Auth;
 
-use Laraveles\Commands\Command;
 use Illuminate\Contracts\Auth\Guard;
+use Laraveles\Commands\CommandHandler;
 use Illuminate\Contracts\Events\Dispatcher;
 use Laraveles\Exceptions\Auth\InactiveUserException;
 
-class AuthenticateUserHandler extends Command
+class AuthenticateUserHandler extends CommandHandler
 {
     /**
      * @var Guard

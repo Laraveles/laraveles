@@ -4,7 +4,7 @@ namespace Laraveles\Commands;
 
 use Illuminate\Contracts\Events\Dispatcher;
 
-abstract class Command
+abstract class CommandHandler
 {
     /**
      * @var Dispatcher
