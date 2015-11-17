@@ -91,4 +91,14 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->getAttribute('active') ?: false;
     }
+
+    /**
+     * Gives the activation token if any.
+     *
+     * @return mixed
+     */
+    public function getActivationToken()
+    {
+        return $this->getAttribute('token');
+    }
 }

@@ -13,8 +13,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Laraveles\Events\SomeEvent' => [
-            'Laraveles\Listeners\EventListener',
+        'Laraveles\Events\UserWasCreated' => [
+            'Laraveles\Listeners\EmailUserActivation',
         ],
     ];
 

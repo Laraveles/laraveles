@@ -2,16 +2,16 @@
 
 namespace Laraveles\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
-use Laraveles\Http\Requests;
+use Laraveles\Commands\User\CreateUser;
 use Laraveles\Http\Controllers\Controller;
+use Laraveles\Http\Requests\RegisterRequest;
 
 class RegisterController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -20,12 +20,21 @@ class RegisterController extends Controller
 
     /**
      * Register a new user.
-     * 
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     *
+     * @param RegisterRequest $request
+     * @return Response
      */
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
-        //
+        try {
+            $this->dispatch(
+                new CreateUser($request->only('username', 'email', 'password'))
+            );
+
+            flash()->info('Bienvenido a Laraveles. Por favor, comprueba tu bandeja de entrada y confirma tu dirección de correo electrónico.');
+
+            return redirect()->home();
+        } catch (\Exception $e) {
+        }
     }
 }

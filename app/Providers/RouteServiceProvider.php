@@ -22,7 +22,8 @@ class RouteServiceProvider extends ServiceProvider
      * @var array
      */
     protected $patterns = [
-        'authProvider' => 'github|google'
+        'authProvider' => 'github|google',
+        'token' => '[a-zA-Z0-9]{30}'
     ];
 
     /**

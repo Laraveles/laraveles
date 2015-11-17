@@ -7,6 +7,17 @@ use Laraveles\User;
 class UserRepository
 {
     /**
+     * Returns the user that has the given activation token.
+     *
+     * @param $token
+     * @return mixed
+     */
+    public function ofToken($token)
+    {
+        return User::where('token', $token)->firstOrFail();
+    }
+
+    /**
      * Finds an user by provider name and identifier or email. Ir using email only
      * active users will be given.
      *

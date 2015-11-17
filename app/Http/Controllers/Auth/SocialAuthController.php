@@ -66,9 +66,9 @@ class SocialAuthController extends AbstractAuthController
      */
     public function errorFound()
     {
-        return $this->loginRedirect()->withErrors([
-            'error' => \Lang::get('auth.oauth-error')
-        ]);
+        flash()->error(\Lang::get('auth.oauth-error'));
+
+        return $this->loginRedirect();
     }
 
     /**
@@ -90,6 +90,10 @@ class SocialAuthController extends AbstractAuthController
         // based on the information given by the OAuth provider. Once created
         // we will log it in as we assume it is a valid and activated user.
         $this->auth->login($user);
+
+        flash()->info(
+            "¡Bienvenido a Laraveles! Tu usuario se ha creado con la información proporcionada por {$driver}. Ya estás listo para participar."
+        );
 
         return $this->afterLoginRedirect();
     }

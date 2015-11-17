@@ -17,6 +17,7 @@ class CreateUserHandlerTest extends TestCase
     {
         parent::setUp();
         $this->handler = $this->app->make(CreateUserHandler::class);
+        $this->withoutEvents();
     }
 
     public function testRegisterValidUser()

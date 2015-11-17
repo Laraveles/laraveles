@@ -16,6 +16,6 @@ $factory->define(Laraveles\User::class, function (Faker\Generator $faker) {
         'username' => $faker->userName,
         'name' => $faker->name,
         'email' => $faker->email,
-        'password' => bcrypt(str_random(10)),
+        'password' => bcrypt(str_random(10))
     ];
 });

@@ -2,11 +2,13 @@
 
 @extends ('layout.app')
 
+@section ('content')
+
 <div class="panel">
 
     <div class="panel-heading">
         <h4 class="panel-title">Regístrate</h4>
-        <p>Completa el formulario o accede con tu cuenta de <a href="{{ route('auth.login.social', 'github') }}"><span class="alert round label"><i class="fa fa-github"></i> GitHub</span></a></p>
+        <p>Completa el formulario o accede con tu cuenta de <a href="{{ route('auth.social', 'github') }}"><span class="alert round label"><i class="fa fa-github"></i> GitHub</span></a></p>
     </div>
 
     <hr/>
@@ -16,28 +18,44 @@
         {!! Form::open(['route' => 'auth.register.store', 'id' => 'register-form']) !!}
 
         {{-- Username --}}
-        <label>Usuario *
-            {!! Form::text('username', null, ['tabindex' => 1]) !!}
-        </label>
+        <div class="form-group">
+            <label>Usuario *</label>
+            {!! Form::text('username', null, [
+                'class' => 'form-control',
+                'tabindex' => 1
+            ]) !!}
+        </div>
 
         {{-- E-Mail --}}
-        <label>E-Mail *
-            {!! Form::email('email', null, ['tabindex' => 2]) !!}
-        </label>
+        <div class="form-group">
+            <label>E-Mail *</label>
+            {!! Form::email('email', null, [
+                'class' => 'form-control',
+                'tabindex' => 2
+            ]) !!}
+        </div>
 
         {{-- Password --}}
-        <label>Contraseña *
-            {!! Form::password('password', ['tabindex' => 3]) !!}
-        </label>
+        <div class="form-group">
+            <label>Contraseña *</label>
+            {!! Form::password('password', [
+                'class' => 'form-control',
+                'tabindex' => 3
+            ]) !!}
+        </div>
 
         {{-- Password confirmation --}}
-        <label>Confirmar contraseña *
-            {!! Form::password('password_confirmation', ['tabindex' => 4]) !!}
-        </label>
+        <div class="form-group">
+            <label>Confirmar contraseña *</label>
+            {!! Form::password('password_confirmation', [
+                'class' => 'form-control',
+                'tabindex' => 4
+            ]) !!}
+        </div>
 
         {{-- Send / Cancel --}}
-        <input type="submit" class="button success" value="Regístrate" tabindex="5"/>
-        <a href="{{ route('auth.register') }}" class="button secondary">Cancelar</a>
+        <button type="submit" class="btn btn-success" tabindex="5">Regístrate</button>
+        <a href="{{ route('auth.register.index') }}" class="button secondary">Cancelar</a>
 
         {!! Form::close() !!}
 
@@ -45,4 +63,4 @@
 
 </div>
 
-
+@endsection
