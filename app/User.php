@@ -21,7 +21,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['name', 'username', 'email', 'password'];
+    protected $fillable = ['name', 'username', 'email', 'password', 'avatar', 'github_id', 'google_id'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -29,6 +29,20 @@ class User extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+    /**
+     * Booting the model.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->token = str_random(30);
+        });
+    }
 
     /**
      * Registering a new user but not yet persisting.
@@ -50,6 +64,7 @@ class User extends Model implements AuthenticatableContract,
      */
     public function activate()
     {
+        $this->setAttribute('token', null);
         $this->setAttribute('active', true);
 
         return $this;

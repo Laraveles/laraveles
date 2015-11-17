@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('github_id')->nullable();
             $table->string('google_id')->nullable();
 
+            $table->string('token', 30)->nullable();
             $table->boolean('active')->default(false);
 
             $table->rememberToken();
