@@ -2,7 +2,16 @@
 
 namespace Laraveles\Http;
 
+use Laraveles\Http\Middleware\Authenticate;
+use Laraveles\Http\Middleware\EncryptCookies;
+use Laraveles\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Laraveles\Http\Middleware\RedirectIfAuthenticated;
+use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode;
 
 class Kernel extends HttpKernel
 {
@@ -12,12 +21,12 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-        \Laraveles\Http\Middleware\EncryptCookies::class,
-        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \Laraveles\Http\Middleware\VerifyCsrfToken::class,
+        CheckForMaintenanceMode::class,
+        EncryptCookies::class,
+        AddQueuedCookiesToResponse::class,
+        StartSession::class,
+        ShareErrorsFromSession::class,
+        VerifyCsrfToken::class,
     ];
 
     /**
@@ -26,8 +35,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth'       => \Laraveles\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'guest'      => \Laraveles\Http\Middleware\RedirectIfAuthenticated::class,
+        'auth'       => Authenticate::class,
+        'auth.basic' => AuthenticateWithBasicAuth::class,
+        'guest'      => RedirectIfAuthenticated::class,
     ];
 }
