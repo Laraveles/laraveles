@@ -2,7 +2,9 @@
 
 namespace Laraveles\Commands\User;
 
-class CreateUser
+use Laraveles\Commands\Command;
+
+class CreateUser extends Command
 {
     /**
      * @var array

@@ -60,7 +60,9 @@ class CreateUserHandler
         $user = User::register($username, $password, $email);
         $this->syncWithProvider($user, $provider);
 
-        $this->validate(array_merge($user->toArray(), compact('password')));
+        if (! $command->isValid()) {
+            $this->validate(array_merge($user->toArray(), compact('password')));
+        }
 
         $user->save();
 
