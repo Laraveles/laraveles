@@ -4,7 +4,6 @@ namespace Laraveles\Services;
 
 use ParsedownExtra as Markdown;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Contracts\Cache\Repository as Cache;
 
 class Docs
 {
