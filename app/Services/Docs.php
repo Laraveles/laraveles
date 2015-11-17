@@ -54,9 +54,11 @@ class Docs
      */
     public function section($section)
     {
-        return $this->markdown->parse(
+        $content = $this->versionLinks(
             $this->file->get($this->sectionPath($section))
         );
+
+        return $this->markdown->parse($content);
     }
 
     /**
