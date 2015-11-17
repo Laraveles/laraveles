@@ -8,3 +8,5 @@ Homestead.json
 /public/js
 /public/build
 app/Http/Routes/testing.php
+_ide_helper.php
+.phpstorm.meta.php
