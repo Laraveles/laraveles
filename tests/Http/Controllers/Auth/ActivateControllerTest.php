@@ -12,8 +12,7 @@ class ActivateControllerTest extends TestCase
         $user = factory(User::class)->create([
             'username' => 'laraveles',
             'email'    => 'foo@bar.baz',
-            'active'   => false,
-            'token'    => str_random(30)
+            'active'   => false
         ]);
 
         $this->visit(route('auth.activate', [$user->token]))
