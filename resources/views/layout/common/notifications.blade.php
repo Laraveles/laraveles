@@ -1,5 +1,7 @@
 {{-- layout.common.notifications --}}
 
+@include ('flash::message')
+
 @if ($errors->count())
     <section class="alert">
         <div class="alert alert-danger">
