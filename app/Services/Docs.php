@@ -22,7 +22,7 @@ class Docs
     /**
      * @var Markdown
      */
-    private $markdown;
+    protected $markdown;
 
     /**
      * Docs constructor.
@@ -62,12 +62,23 @@ class Docs
     }
 
     /**
+     * Check if a section exists on the current version.
+     *
+     * @param $section
+     * @return bool
+     */
+    public function exists($section)
+    {
+        return $this->file->exists($this->sectionPath($section));
+    }
+
+    /**
      * Replace the version tag for any link found.
      *
      * @param $content
      * @return mixed
      */
-    public function versionLinks($content)
+    protected function versionLinks($content)
     {
         return str_replace('{{version}}', $this->version, $content);
     }
@@ -94,5 +105,47 @@ class Docs
         $this->version = $version;
 
         return $this;
+    }
+
+    /**
+     * Get the versions available for a given section.
+     *
+     * @param $section
+     * @return array
+     */
+    public function versionsOf($section)
+    {
+        $versions = array_filter($this->versions(), function ($version) use ($section) {
+            return app()->make(self::class)
+                        ->version($version)
+                        ->exists($section);
+        });
+
+        // We will filter every version available and leave only those versions
+        // that the given section is found in. Then we will combine the array
+        // versions with itself to have the same values in keys and values.
+        return array_combine($versions, $versions);
+    }
+
+    /**
+     * Provide the highest version number.
+     *
+     * @return mixed
+     */
+    public function lastVersion()
+    {
+        return max($this->versions());
+    }
+
+    /**
+     * Give all versions available.
+     *
+     * @return array
+     */
+    public function versions()
+    {
+        return array_map(
+            'basename', $this->file->directories(base_path('resources/docs'))
+        );
     }
 }
