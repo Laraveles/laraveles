@@ -10,6 +10,8 @@ use Laraveles\Exceptions\Auth\InactiveUserException;
 class AuthenticateUserHandler extends CommandHandler
 {
     /**
+     * The Guard instance.
+     *
      * @var Guard
      */
     protected $auth;
@@ -81,6 +83,9 @@ class AuthenticateUserHandler extends CommandHandler
     {
         $credentials = array_only((array) $user, ['username', 'password']);
 
+        // If the username looks like a valid email address, the username
+        // field will be replaced with the email key. This way it will
+        // be automatically used when performing a loging attempt.
         if (filter_var($user->username, FILTER_VALIDATE_EMAIL)) {
             $credentials['email'] = $credentials['username'];
             unset($credentials['username']);
