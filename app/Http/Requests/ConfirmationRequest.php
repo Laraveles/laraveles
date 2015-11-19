@@ -2,8 +2,6 @@
 
 namespace Laraveles\Http\Requests;
 
-use Laraveles\Http\Requests\Request;
-
 class ConfirmationRequest extends Request
 {
     /**
