@@ -12,16 +12,22 @@ use Laraveles\Exceptions\Auth\SocialUserNotFoundException;
 class SocialAuthenticateUserHandler extends CommandHandler
 {
     /**
+     * The Guard instance.
+     *
      * @var Guard
      */
     protected $auth;
 
     /**
+     * The Socialite instance.
+     *
      * @var Socialite
      */
     protected $socialite;
 
     /**
+     * The user repository instance.
+     *
      * @var UserRepository
      */
     protected $user;
