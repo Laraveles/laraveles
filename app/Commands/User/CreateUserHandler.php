@@ -53,13 +53,13 @@ class CreateUserHandler
         // at all. Is for this case that we will generate a random password to
         // the user. The user will be able to modify the password later on.
         $password = $this->getPassword($password);
+        
+        $user = User::register($username, $password, $email);
+        $this->syncWithProvider($user, $provider);
 
         // Registering a new user and syncing its data with the social provider
         // (if any). Once done, we are ready to make the user persistent and
         // also fire the event to let others now that it has been created.
-        $user = User::register($username, $password, $email);
-        $this->syncWithProvider($user, $provider);
-
         if (! $command->isValid()) {
             $this->validate(array_merge($user->toArray(), compact('password')));
         }
