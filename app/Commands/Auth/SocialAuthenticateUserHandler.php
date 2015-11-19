@@ -54,6 +54,8 @@ class SocialAuthenticateUserHandler extends CommandHandler
     }
 
     /**
+     * Handle social authentication.
+     *
      * @param SocialAuthenticateUser $provider
      * @return mixed
      * @throws SocialUserNotFoundException
