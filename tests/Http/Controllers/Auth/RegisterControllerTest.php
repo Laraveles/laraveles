@@ -1,5 +1,6 @@
 <?php
 
+use Laraveles\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class RegisterControllerTest extends TestCase
@@ -27,6 +28,15 @@ class RegisterControllerTest extends TestCase
              ->seePageIs(route('auth.register.index'))
              ->see('obligatorio')
              ->dontSeeInDatabase('users', ['email' => 'foo@bar.baz']);
+    }
+    
+    public function test_I_cannot_register_if_logged_in()
+    {
+        $user = factory(User::class)->create();
+
+        $this->actingAs($user)
+             ->visitRegisterPage()
+             ->seePageIsHome();
     }
     
     protected function typeValidUser()
