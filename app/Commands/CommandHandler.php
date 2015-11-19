@@ -7,6 +7,8 @@ use Illuminate\Contracts\Events\Dispatcher;
 abstract class CommandHandler
 {
     /**
+     * The Event dispatcher instance.
+     *
      * @var Dispatcher
      */
     protected $dispatcher;

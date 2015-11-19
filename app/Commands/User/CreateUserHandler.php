@@ -53,7 +53,7 @@ class CreateUserHandler
         // at all. Is for this case that we will generate a random password to
         // the user. The user will be able to modify the password later on.
         $password = $this->getPassword($password);
-        
+
         $user = User::register($username, $password, $email);
         $this->syncWithProvider($user, $provider);
 
