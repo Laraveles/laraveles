@@ -107,6 +107,9 @@ class SocialAuthenticateUserHandler extends CommandHandler
         if (! is_null($email) && empty($user->getAttribute('email'))) {
             $user->setAttribute('email', $email);
         }
+        // We'll set the users email to the email provided if empty and any is
+        // provided. Also the OAuth driver id will be established in case it
+        // was not found. This will would link the provider to the user.
         if (empty($user->getAttribute($field))) {
             $user->setAttribute($field, $identifier);
         }
