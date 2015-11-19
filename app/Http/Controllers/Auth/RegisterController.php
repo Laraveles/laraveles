@@ -9,6 +9,14 @@ use Laraveles\Http\Requests\RegisterRequest;
 class RegisterController extends Controller
 {
     /**
+     * RegisterController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('guest');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return Response
