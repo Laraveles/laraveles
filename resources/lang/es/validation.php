@@ -105,6 +105,12 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'company' => 'empresa',
+        'website' => 'sitio web',
+        'username' => 'usuario',
+        'password' => 'contraseña',
+        'password_confirmation' => 'confirmar contraseña'
+    ],
 
 ];
