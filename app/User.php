@@ -45,6 +45,16 @@ class User extends Model implements AuthenticatableContract,
     }
 
     /**
+     * The user may be a recruiter.
+     *
+     * @return HasOne
+     */
+    public function recruiter()
+    {
+        return $this->hasOne(Recruiter::class);
+    }
+
+    /**
      * Registering a new user but not yet persisting.
      *
      * @param $username

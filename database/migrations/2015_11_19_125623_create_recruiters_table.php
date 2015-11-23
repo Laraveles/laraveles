@@ -19,6 +19,8 @@ class CreateRecruitersTable extends Migration
             $table->string('company');
             $table->string('website');
 
+            $table->integer('user_id');
+
             $table->timestamps();
         });
     }
