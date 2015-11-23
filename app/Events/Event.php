@@ -4,7 +4,7 @@ namespace Laraveles\Events;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
-class AbstractEvent
+class Event
 {
     use DispatchesJobs;
 }
