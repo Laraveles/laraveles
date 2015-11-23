@@ -37,6 +37,10 @@ class RecruiterController extends Controller
         $command = $request->only('company', 'website', 'avatar');
         $command['actor'] = auth()->user();
 
+        if ($request->file('avatar')) {
+            $command['avatar'] = $request->file('avatar')->getRealPath();
+        }
+
         $this->dispatchFromArray(UpdateRecruiter::class, $command);
 
         return redirect()->route('account.recruiter');

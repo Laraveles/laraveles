@@ -4,7 +4,7 @@
 
 @section ('tab')
 
-    {!! Form::model(auth()->user()->recruiter, ['route' => 'account.recruiter.store', 'file' => true]) !!}
+    {!! Form::model(auth()->user()->recruiter, ['route' => 'account.recruiter.store', 'files' => true]) !!}
 
     {{-- Company name --}}
     <div class="form-group">
