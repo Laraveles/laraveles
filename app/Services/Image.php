@@ -108,6 +108,8 @@ class Image
     }
 
     /**
+     * Set the image width.
+     *
      * @param int $width
      * @return Avatar
      */
@@ -119,6 +121,8 @@ class Image
     }
 
     /**
+     * Set the image height.
+     *
      * @param int $height
      * @return Avatar
      */
@@ -130,6 +134,8 @@ class Image
     }
 
     /**
+     * Set the aspect ratio.
+     *
      * @param boolean $aspectRatio
      * @return Avatar
      */
@@ -141,6 +147,8 @@ class Image
     }
 
     /**
+     * Set the file to play with.
+     *
      * @param string $from
      * @return Image
      */
