@@ -11,7 +11,7 @@ class Recruiter extends Model
      *
      * @var array
      */
-    protected $guard = [];
+    protected $guarded = [];
 
     /**
      * A recruiter may have many jobs.

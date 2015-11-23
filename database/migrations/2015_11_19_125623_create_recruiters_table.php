@@ -15,9 +15,9 @@ class CreateRecruitersTable extends Migration
         Schema::create('recruiters', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('avatar');
             $table->string('company');
-            $table->string('website');
+            $table->string('website')->nullable();
+            $table->string('avatar')->nullable();
 
             $table->integer('user_id');
 
