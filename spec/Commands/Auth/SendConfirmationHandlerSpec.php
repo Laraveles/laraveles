@@ -20,13 +20,14 @@ class SendConfirmationHandlerSpec extends ObjectBehavior
         $this->shouldHaveType('Laraveles\Commands\Auth\SendConfirmationHandler');
     }
     
-    public function it_sends_an_email_if_user_is_active(AuthMailer $mailer, UserRepository $repository)
+    public function it_sends_an_email_if_user_is_not_active(AuthMailer $mailer, UserRepository $repository)
     {
         $repository->ofToken('foo')
                    ->shouldBeCalled()
-                   ->willReturn(new ActiveUserStub);
+                   ->willReturn(new InactiveUserStub);
 
-        $mailer->confirmation('foo@bar.baz', 'foo');
+        $mailer->confirmation('foo@bar.baz', 'foo')
+               ->shouldBeCalled();
 
         $this->handle(new SendConfirmation('foo'));
     }
@@ -37,7 +38,8 @@ class SendConfirmationHandlerSpec extends ObjectBehavior
                    ->shouldBeCalled()
                    ->willReturn(new ActiveUserStub);
 
-        $mailer->confirmation()->shouldNotBeCalled();
+        $mailer->confirmation()
+               ->shouldNotBeCalled();
 
         $this->handle(new SendConfirmation('foo'));
     }
@@ -54,10 +56,12 @@ class ActiveUserStub
 class InactiveUserStub
 {
     public $email = 'foo@bar.baz';
+
     public function isActive()
     {
         return false;
     }
+
     public function getActivationToken()
     {
         return 'foo';
