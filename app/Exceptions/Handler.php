@@ -3,6 +3,7 @@
 namespace Laraveles\Exceptions;
 
 use Exception;
+use Illuminate\Auth\Access\UnauthorizedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

@@ -4,11 +4,11 @@ namespace Laraveles\Events;
 
 use Laraveles\User;
 
-class UserWasCreated extends AbstractEvent
+class UserWasCreated extends Event
 {
     /**
      * The user model instance.
-     *
+     *O
      * @var User
      */
     public $user;

@@ -2,6 +2,8 @@
 
 namespace Laraveles\Providers;
 
+use Laraveles\Job;
+use Laraveles\Policies\JobPolicy;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -13,7 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'Laraveles\Model' => 'Laraveles\Policies\ModelPolicy',
+        Job::class => JobPolicy::class
     ];
 
     /**
@@ -26,7 +28,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(GateContract $gate)
     {
         parent::registerPolicies($gate);
-
-        //
     }
 }

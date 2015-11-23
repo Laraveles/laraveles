@@ -12,7 +12,9 @@
 @include('layout.common.notifications')
 
 {{-- Main Content --}}
-@yield('content')
+<div class="container">
+    @yield('content')
+</div>
 
 {{-- Footer --}}
 @include('layout.common.footer')

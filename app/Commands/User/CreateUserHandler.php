@@ -2,11 +2,13 @@
 
 namespace Laraveles\Commands\User;
 
+use Illuminate\Contracts\Events\Dispatcher;
 use Laraveles\User;
 use Laraveles\Events\UserWasCreated;
+use Laraveles\Commands\CommandHandler;
 use Laraveles\Validation\UserValidator;
 
-class CreateUserHandler
+class CreateUserHandler extends CommandHandler
 {
     /**
      * List of attributes to sync with the user.
@@ -33,10 +35,13 @@ class CreateUserHandler
      * CreateUserHandler constructor.
      *
      * @param UserValidator $validator
+     * @param Dispatcher    $dispatcher
      */
-    public function __construct(UserValidator $validator)
+    public function __construct(UserValidator $validator, Dispatcher $dispatcher)
     {
         $this->validator = $validator;
+
+        parent::__construct($dispatcher);
     }
 
     /**
@@ -66,7 +71,7 @@ class CreateUserHandler
 
         $user->save();
 
-        event(new UserWasCreated($user));
+        $this->fire(new UserWasCreated($user));
 
         return $user;
     }
