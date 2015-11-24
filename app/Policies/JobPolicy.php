@@ -63,6 +63,6 @@ class JobPolicy
      */
     public function update(User $user, Job $job)
     {
-        return ($job->recruiter == $user->recruiter) && ($job->listing);
+        return ($job->recruiter == $user->recruiter) && ($job->isApproved());
     }
 }

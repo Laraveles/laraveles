@@ -37,7 +37,7 @@ class JobControllerTest extends TestCase
     public function test_I_cant_modify_a_job_if_I_am_not_the_recruiter()
     {
         $user = $this->createUser();
-        $job = factory(\Laraveles\Job::class)->make();
+        $job = factory(\Laraveles\Job::class)->make(['listing' => true]);
         $job->recruiter()->associate($user->recruiter);
         $job->save();
 
@@ -79,20 +79,6 @@ class JobControllerTest extends TestCase
              ->see('Eliminar');
     }
 
-    public function test_I_can_modify_a_job_if_owner()
-    {
-        $user = $this->createUser();
-        $job = factory(\Laraveles\Job::class)->make(['title' => 'developer', 'listing' => true]);
-        $job->recruiter()->associate($user->recruiter);
-        $job->save();
-
-        $this->actingAs($user)
-             ->visit(route('job.edit', $job->id))
-             ->type('bar', 'title')
-             ->press('Guardar')
-             ->seeInDatabase('jobs', ['title' => 'bar']);
-    }
-    
     protected function createUser()
     {
         $user = factory(User::class)->create();

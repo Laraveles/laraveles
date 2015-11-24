@@ -116,13 +116,16 @@ class JobController extends Controller
      */
     public function show($id)
     {
-        $job = Job::with('recruiter')
-                  ->findOrFail($id);
+        $job = Job::with('recruiter');
 
         // We will block any request from any user that is not a moderator as
         // we will not show this job until it has been approved. This will
         // prevent any direct access from the URL until it is validated.
-        $this->authorize('show', $job);
+        if (Gate::denies('moderate', Job::class)) {
+            $job = $job->approved();
+        }
+
+        $job = $job->findOrFail($id);
 
         return view('job.show', [
             'job'       => $job,
