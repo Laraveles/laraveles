@@ -26,7 +26,7 @@ class JobControllerTest extends TestCase
     public function test_I_can_see_a_job_details()
     {
         $user = $this->createUser();
-        $job = factory(\Laraveles\Job::class)->make();
+        $job = factory(\Laraveles\Job::class)->make(['listing' => true]);
         $job->recruiter()->associate($user->recruiter);
         $job->save();
 
