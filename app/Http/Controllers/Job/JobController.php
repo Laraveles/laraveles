@@ -123,6 +123,8 @@ class JobController extends Controller
     {
         $job = Job::findOrFail($id);
         $this->authorize('update', $job);
+
+        return view('job.create', ['job' => $job, 'types' => $this->getJobTypes()]);
     }
 
     /**
@@ -132,9 +134,17 @@ class JobController extends Controller
      * @param  int                      $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateJobRequest $request, $id)
     {
-        $this->authorize(Job::class);
+        $job = Job::findOrFail($id);
+        $this->authorize($job);
+
+        $job->fill($request->only('title', 'description', 'apply', 'type', 'city', 'country', 'remote'));
+        $job->save();
+
+        flash()->info("El empleo \"{$job->title}\" se modificó con éxito.");
+
+        return redirect()->route('job.show', $job->id);
     }
 
     /**

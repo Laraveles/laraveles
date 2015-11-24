@@ -28,6 +28,7 @@
                 'class' => 'form-control',
                 'placeholder' => 'Describe detalladamente la oferta'
             ]) !!}
+            <p class="help-block">Utiliza el lenguaje Markdown para formatear el contenido.</p>
         </div>
 
         {{-- How to apply --}}
@@ -37,12 +38,13 @@
                 'class' => 'form-control',
                 'placeholder' => 'Explica el procedimiento de inscripción'
             ]) !!}
+            <p class="help-block">Utiliza el lenguaje Markdown para formatear el contenido.</p>
         </div>
 
         {{-- Type --}}
         <div class="form-group">
             <label>Tipo</label>
-            {!! Form::select('type', $types, [
+            {!! Form::select('type', $types, null, [
                 'class' => 'form-control'
             ]) !!}
         </div>
@@ -72,10 +74,11 @@
 
         {{-- Remote --}}
         <div class="form-group">
-            <label>Remoto</label>
-            {!! Form::checkbox('remote', true, [
-                'class' => 'form-control'
-            ]) !!}
+
+            <div class="checkbox">
+                <label>{!! Form::checkbox('remote', true) !!} Posición remota</label>
+            </div>
+            <p class="help-block">Marcar esta opción si la oferta permite trabajo remoto.</p>
         </div>
     </fieldset>
 

@@ -6,7 +6,12 @@
 
     @can ('moderate', $job)
         <a href="{{ route('job.edit', $job->id) }}" class="btn btn-primary">Modificar</a>
-        <a href="{{ route('job.destroy', $job->id) }}" class="btn btn-danger">Eliminar</a>
+        <a href="{{ route('job.destroy', $job->id) }}"
+           data-method="delete"
+           data-confirm="¿Seguro que quieres eliminar este trabajo?"
+           class="btn btn-danger">
+            Eliminar
+        </a>
         @unless ($job->listing)
             <a href="{{ route('job.approve', $job->id) }}" class="btn btn-success">Aprobar</a>
         @endunless
