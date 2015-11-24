@@ -76,7 +76,7 @@
         <div class="form-group">
 
             <div class="checkbox">
-                <label>{!! Form::checkbox('remote', true) !!} Posición remota</label>
+                <label>{!! Form::checkbox('remote', true, false) !!} Posición remota</label>
             </div>
             <p class="help-block">Marcar esta opción si la oferta permite trabajo remoto.</p>
         </div>

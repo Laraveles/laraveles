@@ -34,7 +34,7 @@ class RegisterController extends Controller
      */
     public function store(RegisterRequest $request)
     {
-        try {
+//        try {
             $this->dispatch(
                 new CreateUser($request->only('username', 'email', 'password'))
             );
@@ -42,7 +42,8 @@ class RegisterController extends Controller
             flash()->info('Bienvenido a Laraveles. Por favor, comprueba tu bandeja de entrada y confirma tu dirección de correo electrónico.');
 
             return redirect()->home();
-        } catch (\Exception $e) {
-        }
+//        } catch (\Exception $e) {
+//            return 'something went wrong';
+//        }
     }
 }

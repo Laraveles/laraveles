@@ -71,6 +71,10 @@ class JobController extends Controller
         $job->save();
 
         event(new JobWasCreated($job));
+
+        flash()->info("El puesto se ha creado correctamente y está pendiente de revisión. Recibirá un e-mail cuando se confirme su aprobación.");
+
+        return redirect()->route('job.index');
     }
 
     /**
