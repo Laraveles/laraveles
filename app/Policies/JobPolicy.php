@@ -11,6 +11,18 @@ class JobPolicy
     use HandlesAuthorization;
 
     /**
+     * @param $user
+     * @param $ability
+     * @return bool
+     */
+    public function before($user, $ability)
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+    }
+
+    /**
      * Allow job creation if recruiter profile is complete.
      *
      * @param User $user
@@ -19,6 +31,18 @@ class JobPolicy
     public function create(User $user)
     {
         return $user->recruiter ? true : false;
+    }
+
+    /**
+     * Show only if job is approved.
+     *
+     * @param User $user
+     * @param Job  $job
+     * @return mixed
+     */
+    public function show(User $user, Job $job)
+    {
+        return $job->isApproved();
     }
 
     /**
@@ -39,10 +63,6 @@ class JobPolicy
      */
     public function update(User $user, Job $job)
     {
-        if (! $job->recruiter || ! $user->recruiter) {
-            return false;
-        }
-
-        return $job->recruiter == $user->recruiter;
+        return ($job->recruiter == $user->recruiter) && ($job->listing);
     }
 }

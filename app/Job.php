@@ -45,6 +45,29 @@ class Job extends Model
     }
 
     /**
+     * Approved scope.
+     *
+     * @param $query
+     */
+    public function scopeApproved($query)
+    {
+        return $query->where('listing', true)
+                     ->orderBy('id', 'DESC');
+    }
+
+    /**
+     * Ordered scope.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('listing', 'ASC')
+                     ->orderBy('id', 'DESC');
+    }
+
+    /**
      * Get the formatted location.
      *
      * TODO: This should be moved to a presenter
@@ -73,5 +96,15 @@ class Job extends Model
     public function isNew()
     {
         return $this->created_at->diffInDays() <= 7;
+    }
+
+    /**
+     * Check if the job has been approved.
+     *
+     * @return mixed
+     */
+    public function isApproved()
+    {
+        return $this->getAttribute('listing');
     }
 }

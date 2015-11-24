@@ -2,12 +2,13 @@
 
 namespace Laraveles\Http\Controllers\Job;
 
+use Gate;
 use Laraveles\Job;
-use Illuminate\Http\Request;
 use Laraveles\Events\JobWasCreated;
 use Laraveles\Events\JobWasApproved;
 use Laraveles\Http\Controllers\Controller;
 use Laraveles\Http\Requests\CreateJobRequest;
+use Laraveles\Repositories\JobRepository;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class JobController extends Controller
@@ -17,7 +18,7 @@ class JobController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['show']]);
+        $this->middleware('auth', ['except' => ['index', 'show']]);
     }
 
     /**
@@ -27,24 +28,29 @@ class JobController extends Controller
      */
     public function index()
     {
-        $jobs = Job::orderBy('listing', 'ASC')
-                   ->orderBy('id', 'DESC')
-                   ->get();
+        // If the user does not have moderation privileges, we will just show
+        // the approved jobs. Otherwise, we will display every job found at
+        // database and tag it with a "pending for approval" when listing.
+        $jobs = Gate::denies('moderate', Job::class)
+            ? Job::approved()
+            : Job::ordered();
 
-        return view('job.index', compact('jobs'));
+        return view('job.index', ['jobs' => $jobs->get()]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @param CreateJobRequest $request
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
         try {
             $this->authorize('create', Job::class);
-            
+
+            // This authorization will prevent creating jobs if the recruiter
+            // profile is not fully completed. If so, the user will be able
+            // to access to the create display and perform a job creation.
             return view('job.create')
                 ->withTypes($this->getJobTypes());
         } catch (HttpException $e) {
@@ -70,6 +76,10 @@ class JobController extends Controller
         $job->recruiter()->associate(auth()->user()->recruiter);
         $job->save();
 
+        // If the data has been correctly validated and the user has creation
+        // access we will then create the new job instance associating the
+        // recruiter. If no exception thrown we assume everythng was ok.
+        // Then broadcast a new JobWasCreatedEvent to notifiy users.
         event(new JobWasCreated($job));
 
         flash()->info("El puesto se ha creado correctamente y está pendiente de revisión. Recibirá un e-mail cuando se confirme su aprobación.");
@@ -85,9 +95,7 @@ class JobController extends Controller
     {
         $this->authorize('moderate', Job::class);
 
-        $job = Job::findOrFail($id)
-                  ->approve();
-
+        $job = Job::findOrFail($id)->approve();
         $job->save();
 
         // TODO: capture this event and send an email to its owner and subscriptors
@@ -110,6 +118,11 @@ class JobController extends Controller
     {
         $job = Job::with('recruiter')
                   ->findOrFail($id);
+
+        // We will block any request from any user that is not a moderator as
+        // we will not show this job until it has been approved. This will
+        // prevent any direct access from the URL until it is validated.
+        $this->authorize('show', $job);
 
         return view('job.show', [
             'job'       => $job,
@@ -134,8 +147,8 @@ class JobController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int                      $id
+     * @param CreateJobRequest $request
+     * @param  int             $id
      * @return \Illuminate\Http\Response
      */
     public function update(CreateJobRequest $request, $id)

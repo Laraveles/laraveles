@@ -24,6 +24,7 @@ $factory->define(Laraveles\Job::class, function (Faker\Generator $faker) {
     return [
         'title'       => $faker->sentence(rand(1, 5)),
         'description' => $faker->paragraph(rand(3, 8)),
+        'type'        => $faker->randomElement(['freelance', 'full-time', 'part-time', 'temporal']),
         'apply'       => $faker->paragraph(rand(2, 5)),
         'city'        => $faker->city,
         'country'     => $faker->country

@@ -7,7 +7,6 @@
     <div class="row">
         <div class="col-md-8">
             @foreach ($jobs as $job)
-
                 <div class="media">
                     <a href="{{ route('job.show', $job->id) }}">
 
