@@ -12,7 +12,10 @@ class CreateJobRequest extends Request
     public function rules()
     {
         return [
-            //
+            'title' => 'required|min:5',
+            'description' => 'required|min:60',
+            'apply' => 'required|min:30',
+            'type' => 'required'
         ];
     }
 

@@ -2,11 +2,10 @@
 
 namespace Laraveles\Listeners;
 
-use Laraveles\Events\AbstractEvent;
 use Laraveles\Events\UserWasCreated;
 use Laraveles\Commands\Auth\SendConfirmation;
 
-class EmailUserActivation extends AbstractEvent
+class EmailUserActivation
 {
     /**
      * @param UserWasCreated $event

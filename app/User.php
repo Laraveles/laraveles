@@ -103,6 +103,14 @@ class User extends Model implements AuthenticatableContract,
     }
 
     /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->getAttribute('username') == 'IsraelOrtuno';
+    }
+
+    /**
      * Gives the activation token if any.
      *
      * @return mixed

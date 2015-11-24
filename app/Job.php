@@ -11,7 +11,7 @@ class Job extends Model
      *
      * @var array
      */
-    protected $guard = [];
+    protected $guarded = [];
 
     /**
      * A Job position belongs to a unique Recruiter.
@@ -21,5 +21,17 @@ class Job extends Model
     public function recruiter()
     {
         return $this->belongsTo(Recruiter::class);
+    }
+
+    /**
+     * Approves the job for listing
+     *
+     * @return $this
+     */
+    public function approve()
+    {
+        $this->setAttribute('listing', true);
+
+        return $this;
     }
 }

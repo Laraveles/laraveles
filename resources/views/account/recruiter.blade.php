@@ -4,7 +4,7 @@
 
 @section ('tab')
 
-    {!! Form::model(auth()->user()->recruiter, ['route' => 'account.recruiter.store', 'files' => true]) !!}
+    {!! Form::model($recruiter, ['route' => 'account.recruiter.store', 'files' => true]) !!}
 
     {{-- Company name --}}
     <div class="form-group">
@@ -24,6 +24,10 @@
         ]) !!}
     </div>
 
+    @if ($recruiter && $recruiter->avatar)
+        <img src="{{ url("img/recruiters/{$recruiter->avatar}") }}" width="100px">
+    @endif
+
     {{-- Avatar --}}
     <div class="form-group">
         <label>Avatar</label>
@@ -34,7 +38,7 @@
     </div>
 
     {{-- Save --}}
-    <button type="submit" class="btn btn-success" tabindex="3">Guardar</button>
+    @include ('_forms.buttons.save')
 
     {!! Form::close() !!}
 

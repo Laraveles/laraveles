@@ -23,7 +23,9 @@ class RecruiterController extends Controller
      */
     public function index()
     {
-        return view('account.recruiter');
+        $recruiter = auth()->user()->recruiter;
+
+        return view('account.recruiter', compact('recruiter'));
     }
 
     /**

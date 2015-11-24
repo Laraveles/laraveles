@@ -4,17 +4,15 @@ namespace Laraveles\Events;
 
 use Laraveles\Job;
 
-class JobWasCreated extends Event
+class JobWasApproved
 {
     /**
-     * The created job.
-     *
      * @var Job
      */
-    public $job;
+    private $job;
 
     /**
-     * JobWasCreated constructor.
+     * JobWasApproved constructor.
      *
      * @param Job $job
      */

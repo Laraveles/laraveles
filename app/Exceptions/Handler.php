@@ -49,6 +49,11 @@ class Handler extends ExceptionHandler
             $e = new NotFoundHttpException($e->getMessage(), $e);
         }
 
+        if ($e->getCode() == 301) {
+            flash()->warning('El acceso a esta zona está retringido.');
+            return redirect()->home();
+        }
+
         return parent::render($request, $e);
     }
 }

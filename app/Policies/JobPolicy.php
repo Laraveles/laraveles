@@ -22,6 +22,15 @@ class JobPolicy
     }
 
     /**
+     * @param User $user
+     * @return bool
+     */
+    public function moderate(User $user)
+    {
+        return $user->isAdmin();
+    }
+    
+    /**
      * Allows modification when the job belongs to a recruiter.
      *
      * @param User $user

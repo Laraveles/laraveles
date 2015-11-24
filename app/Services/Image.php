@@ -81,6 +81,8 @@ class Image
      */
     public function store($to, $prefix = 'img_')
     {
+        $this->createPath($to);
+
         $extension = (new File($this->from))->guessExtension();
         $file = uniqid($prefix) . '.' . $extension;
         $image = $this->image->make($this->from);
@@ -104,6 +106,18 @@ class Image
     {
         if ($this->file->exists($this->from)) {
             $this->file->delete($this->from);
+        }
+    }
+
+    /**
+     * Create the folder if does not exist.
+     *
+     * @param $to
+     */
+    protected function createPath($to)
+    {
+        if (! $this->file->exists($to)) {
+            $this->file->makeDirectory($to, null, true);
         }
     }
 
@@ -157,5 +171,15 @@ class Image
         $this->from = $from;
 
         return $this;
+    }
+
+    /**
+     * Get the file to play with.
+     *
+     * @return string
+     */
+    public function getFrom()
+    {
+        return $this->from;
     }
 }

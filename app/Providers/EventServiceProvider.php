@@ -2,6 +2,8 @@
 
 namespace Laraveles\Providers;
 
+use Laraveles\Events\JobWasCreated;
+use Laraveles\Listeners\NotifyJobCreation;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -16,6 +18,9 @@ class EventServiceProvider extends ServiceProvider
         'Laraveles\Events\UserWasCreated' => [
             'Laraveles\Listeners\EmailUserActivation',
         ],
+        JobWasCreated::class => [
+            NotifyJobCreation::class
+        ]
     ];
 
     /**

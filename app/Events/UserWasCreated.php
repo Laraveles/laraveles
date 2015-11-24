@@ -8,7 +8,7 @@ class UserWasCreated extends Event
 {
     /**
      * The user model instance.
-     *O
+     *
      * @var User
      */
     public $user;
