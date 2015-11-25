@@ -11,12 +11,18 @@ class Job extends Model
      *
      * @var array
      */
-    protected $guarded = [];
+    protected $fillable = ['title', 'description', 'apply', 'type', 'city', 'country', 'remote'];
 
+    /**
+     * Booting the model.
+     */
     public static function boot()
     {
         parent::boot();
 
+        // When getting an unchecked checkbox from the view form, it normally
+        // obtain a null value. We will check for it in order to transform
+        // this into a not null value as `false` to pass the constraint.
         static::saving(function (Job $job) {
             $job->remote = ! is_null($job->remote);
         });
@@ -37,11 +43,27 @@ class Job extends Model
      *
      * @return $this
      */
-    public function approve()
+    public static function approve($id)
     {
-        $this->setAttribute('listing', true);
+        $job = $this->findOrFail($id);
+        $job->setAttribute('listing', true);
 
         return $this;
+    }
+
+    /**
+     * Will register a new job.
+     *
+     * @param Recruiter $recruiter
+     * @param           $data
+     * @return static
+     */
+    public static function register(Recruiter $recruiter, $data)
+    {
+        $job = new static($data);
+        $job->recruiter()->associate($recruiter);
+
+        return $job;
     }
 
     /**

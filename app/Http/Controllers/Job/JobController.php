@@ -70,10 +70,9 @@ class JobController extends Controller
     {
         $this->authorize('create', Job::class);
 
-        $job = new Job(
-            $request->only('title', 'description', 'apply', 'type', 'city', 'country', 'remote')
+        $job = Job::register(
+            auth()->user()->recruiter, $request->except('_token')
         );
-        $job->recruiter()->associate(auth()->user()->recruiter);
         $job->save();
 
         // If the data has been correctly validated and the user has creation
@@ -88,6 +87,8 @@ class JobController extends Controller
     }
 
     /**
+     * Aprove a job for listing.
+     *
      * @param $id
      * @return string
      */
@@ -95,7 +96,7 @@ class JobController extends Controller
     {
         $this->authorize('moderate', Job::class);
 
-        $job = Job::findOrFail($id)->approve();
+        $job = Job::approve($id);
         $job->save();
 
         // TODO: capture this event and send an email to its owner and subscriptors
@@ -159,7 +160,7 @@ class JobController extends Controller
         $job = Job::findOrFail($id);
         $this->authorize($job);
 
-        $job->fill($request->only('title', 'description', 'apply', 'type', 'city', 'country', 'remote'));
+        $job->fill($request->except('_token'));
         $job->save();
 
         flash()->info("El empleo \"{$job->title}\" se modificó con éxito.");
