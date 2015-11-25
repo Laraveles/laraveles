@@ -1,6 +1,6 @@
 <?php
 
-namespace Laraveles\Http\Controllers\Job;
+namespace Laraveles\Http\Controllers;
 
 use Gate;
 use Laraveles\Job;

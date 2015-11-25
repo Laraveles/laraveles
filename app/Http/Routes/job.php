@@ -6,14 +6,10 @@
 |--------------------------------------------------------------------------
 */
 
-$router->group(['namespace' => 'Job'], function () use ($router) {
+// Job Tasks
+//
+get('job/approve/{id}', ['as' => 'job.approve', 'uses' => 'JobController@approve']);
 
-    // Job Tasks
-    //
-    get('job/approve/{id}', ['as' => 'job.approve', 'uses' => 'JobController@approve']);
-
-    // Job Resource
-    //
-    resource('job', 'JobController');
-
-});
+// Job Resource
+//
+resource('job', 'JobController');
