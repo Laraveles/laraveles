@@ -41,14 +41,15 @@ class Job extends Model
     /**
      * Approves the job for listing
      *
+     * @param $id
      * @return $this
      */
     public static function approve($id)
     {
-        $job = $this->findOrFail($id);
+        $job = static::findOrFail($id);
         $job->setAttribute('listing', true);
 
-        return $this;
+        return $job;
     }
 
     /**
