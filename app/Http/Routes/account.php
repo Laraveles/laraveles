@@ -6,7 +6,11 @@
 |--------------------------------------------------------------------------
 */
 
-$router->group(['prefix' => 'account', 'namespace' => 'Account'], function () use ($router) {
+$router->group([
+    'prefix'     => 'account',
+    'namespace'  => 'Account',
+    'middleware' => 'auth'
+], function () use ($router) {
 
     // Recruiter Resource
     //
