@@ -6,11 +6,10 @@
 </head>
 <body>
 {{-- Navigation --}}
-{{--@include('layout.common.navigation')--}}
+@include('layout.common.navigation')
 
 @if (auth()->check())
-    <p>Logueado como <strong>{{ auth()->user()->username }}</strong> <a href="{{ route('auth.logout') }}">Salir</a></p>
-
+    <p>Logueado como <strong>{{ $user->username }}</strong> <a href="{{ route('auth.logout') }}">Salir</a></p>
 @else
     <a href="{{ route('auth.login') }}">Acceder</a>
 @endif

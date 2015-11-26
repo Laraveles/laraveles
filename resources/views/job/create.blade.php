@@ -12,6 +12,7 @@
 
     <fieldset>
         <legend>Descripción del puesto</legend>
+
         {{-- Title --}}
         <div class="form-group">
             <label>Título</label>

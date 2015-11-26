@@ -2,6 +2,8 @@
 
 @extends ('account.base')
 
+@section ('tab-title', 'Empleo')
+
 @section ('tab')
 
     {!! Form::model($recruiter, ['route' => 'account.recruiter.store', 'files' => true]) !!}
