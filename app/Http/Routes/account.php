@@ -12,9 +12,20 @@ $router->group([
     'middleware' => 'auth'
 ], function () use ($router) {
 
-    // Recruiter Resource
+    // Base Account
     //
-    get('recruiter', ['as' => 'account.recruiter', 'uses' => 'RecruiterController@index']);
-    post('recruiter', ['as' => 'account.recruiter.store', 'uses' => 'RecruiterController@store']);
+    get('', 'ProfileController@index');
+
+    // Profile Routes
+    //
+    resource('profile', 'ProfileController', ['only' => ['index', 'store']]);
+
+    // Location Routes
+    //
+    resource('location', 'LocationController', ['only' => ['index', 'store']]);
+
+    // Recruiter Routes
+    //
+    resource('recruiter', 'RecruiterController', ['only' => ['index', 'store']]);
 
 });

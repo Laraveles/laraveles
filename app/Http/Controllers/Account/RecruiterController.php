@@ -37,6 +37,6 @@ class RecruiterController extends Controller
 
         $this->dispatchFromArray(UpdateRecruiter::class, $command);
 
-        return redirect()->route('account.recruiter');
+        return redirect()->route('account.recruiter.index');
     }
 }
