@@ -13,7 +13,7 @@ class RecruiterControllerTest extends TestCase
         $user = factory(User::class)->create();
 
         $this->actingAs($user)
-             ->visit(route('account.recruiter'))
+             ->visit(route('account.recruiter.index'))
              ->type('laraveles', 'company')
              ->type('laraveles.com', 'website')
             ->press('Guardar')
@@ -29,7 +29,7 @@ class RecruiterControllerTest extends TestCase
         $user->recruiter()->save(new Recruiter(['company' => 'laraveles', 'website' => 'laraveles.com']));
 
         $this->actingAs($user)
-             ->visit(route('account.recruiter'))
+             ->visit(route('account.recruiter.index'))
              ->type('foo', 'company')
              ->type('bar.com', 'website')
              ->press('Guardar')
@@ -41,7 +41,7 @@ class RecruiterControllerTest extends TestCase
     
     public function test_I_cant_access_if_not_logged_in()
     {
-        $this->visit(route('account.recruiter'))
+        $this->visit(route('account.recruiter.index'))
              ->seePageIs(route('auth.login'));
     }
 }
