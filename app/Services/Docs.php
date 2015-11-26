@@ -20,20 +20,14 @@ class Docs
     protected $file;
 
     /**
-     * @var Markdown
-     */
-    protected $markdown;
-
-    /**
      * Docs constructor.
      *
      * @param Filesystem $file
      * @param Markdown   $markdown
      */
-    public function __construct(Filesystem $file, Markdown $markdown)
+    public function __construct(Filesystem $file)
     {
         $this->file = $file;
-        $this->markdown = $markdown;
     }
 
     /**
@@ -58,7 +52,7 @@ class Docs
             $this->file->get($this->sectionPath($section))
         );
 
-        return $this->markdown->parse($content);
+        return markdown($content);
     }
 
     /**
