@@ -176,9 +176,10 @@ class JobController extends Controller
      */
     public function destroy($id)
     {
-        $this->authorize('moderate', Job::class);
-
         $job = Job::findOrFail($id);
+
+        $this->authorize('update', $job);
+
         $job->delete();
 
         flash()->info("Se ha eliminado el empleo \"{$job->title}\"");
