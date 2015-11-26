@@ -1,0 +1,9 @@
+{
+  "name": "laraveles",
+  "authors": [
+    "Israel Ortuño <ai.ortuno@gmail.com>"
+  ],
+  "dependencies": {
+    "bootstrap": "4.0"
+  }
+}
