@@ -20,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
             return get_class($command) . 'Handler@handle';
         });
 
+        $this->registerSharedVariables();
         $this->registerDevProviders();
     }
 
@@ -34,12 +35,24 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
+     * Will share the user variable if logged in.
+     */
+    protected function registerSharedVariables()
+    {
+        view()->composer('*', function ($view) {
+            if (auth()->check()) {
+                $view->with(['user' => auth()->user()]);
+            }
+        });
+    }
+
+    /**
      * Register any application services.
      *
      * @return void
      */
     public function register()
     {
-        //
+
     }
 }
